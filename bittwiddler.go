@@ -23,7 +23,7 @@ func unarmor(payload []byte) []byte {
 
 const bpb uint = 8
 
-func extractUnsignedInt(unarmoredPayload []byte, start uint, width uint) uint {
+func asUInt(unarmoredPayload []byte, start uint, width uint) uint {
 	data := uint(0)
 	startIndex := start / bpb
 	endIndex := (start + width + bpb - 1) / bpb
@@ -39,9 +39,9 @@ func extractUnsignedInt(unarmoredPayload []byte, start uint, width uint) uint {
 	return data
 }
 
-func extractSignedInt(unarmoredPayload []byte, start uint, width uint) int {
-	data := extractUnsignedInt(unarmoredPayload, start, width)
-	if (((data >> width) - 1) & 1) == 1 {
+func asInt(unarmoredPayload []byte, start uint, width uint) int {
+	data := asUInt(unarmoredPayload, start, width)
+	if (data>>(width-1))&1 == 1 {
 		return -int(pow(2, width) - data)
 	}
 

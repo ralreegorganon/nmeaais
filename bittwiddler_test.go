@@ -23,19 +23,17 @@ func TestNmeaMessageBittwiddling(t *testing.T) {
 		unarmored := unarmor([]byte(payload))
 
 		values := []uint{
-			extractUnsignedInt(unarmored, 0, 6),
-			extractUnsignedInt(unarmored, 6, 2),
-			extractUnsignedInt(unarmored, 8, 30),
-			extractUnsignedInt(unarmored, 38, 4),
-			extractUnsignedInt(unarmored, 50, 10),
-			extractUnsignedInt(unarmored, 60, 1),
-			extractUnsignedInt(unarmored, 61, 28),
-			extractUnsignedInt(unarmored, 89, 27),
-			extractUnsignedInt(unarmored, 116, 12),
-			extractUnsignedInt(unarmored, 128, 9),
-			extractUnsignedInt(unarmored, 137, 6),
-			extractUnsignedInt(unarmored, 143, 2),
-			extractUnsignedInt(unarmored, 148, 1),
+			asUInt(unarmored, 0, 6),
+			asUInt(unarmored, 6, 2),
+			asUInt(unarmored, 8, 30),
+			asUInt(unarmored, 38, 4),
+			asUInt(unarmored, 50, 10),
+			asUInt(unarmored, 60, 1),
+			asUInt(unarmored, 116, 12),
+			asUInt(unarmored, 128, 9),
+			asUInt(unarmored, 137, 6),
+			asUInt(unarmored, 143, 2),
+			asUInt(unarmored, 148, 1),
 		}
 		Convey("The extracted values should be correct", func() {
 			expected := []uint{
@@ -45,8 +43,6 @@ func TestNmeaMessageBittwiddling(t *testing.T) {
 				uint(15),
 				uint(0),
 				uint(1),
-				uint(2644228),
-				uint(30737782),
 				uint(1107),
 				uint(511),
 				uint(40),
@@ -61,14 +57,17 @@ func TestNmeaMessageBittwiddling(t *testing.T) {
 		unarmored := unarmor([]byte(payload))
 
 		values := []int{
-			extractSignedInt(unarmored, 42, 8),
+			asInt(unarmored, 42, 8),
+			asInt(unarmored, 61, 28),
+			asInt(unarmored, 89, 27),
 		}
 		Convey("The extracted values should be correct", func() {
 			expected := []int{
 				-128,
+				2644228,
+				30737782,
 			}
 			So(values, ShouldResemble, expected)
 		})
 	})
-
 }
