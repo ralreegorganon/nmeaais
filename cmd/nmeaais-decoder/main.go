@@ -3,9 +3,11 @@ package main
 import (
 	"bufio"
 	"flag"
+	"fmt"
 	"net"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/ralreegorganon/nmeaais"
 )
 
@@ -18,6 +20,28 @@ func init() {
 func main() {
 	flag.Parse()
 
+	pa := newPacketAccumulator()
+	go func() {
+		for m := range pa.messages {
+			switch m.MessageType {
+			case 1:
+				x, err := m.GetAsPositionReportClassA()
+				if err != nil {
+					log.WithFields(log.Fields{
+						"err":     err,
+						"message": m,
+					}).Warn("Couldn't get specific message type")
+					break
+				}
+				spew.Dump(x)
+				break
+			default:
+				fmt.Printf("Unsupported message of type %v from %v\n", m.MessageType, m.MMSI)
+				break
+			}
+		}
+	}()
+
 	conn, err := net.Dial("tcp", *source)
 	if err != nil {
 		log.Fatal(err)
@@ -29,7 +53,7 @@ func main() {
 		line, err := r.ReadString('\n')
 		if err != nil {
 			log.WithField("err", err).Warn("Couldn't read packet")
-			continue
+			break
 		}
 
 		log.WithField("packet", line).Info("Received packet")
@@ -46,6 +70,39 @@ func main() {
 		log.WithFields(log.Fields{
 			"packet": line,
 			"parsed": packet,
-		}).Info("Parsed packet")
+		}).Debug("Parsed packet")
+
+		pa.packets <- packet
+	}
+}
+
+type packetAccumulator struct {
+	packets  chan *nmeaais.Packet
+	messages chan *nmeaais.Message
+}
+
+func newPacketAccumulator() *packetAccumulator {
+	pa := &packetAccumulator{
+		packets:  make(chan *nmeaais.Packet),
+		messages: make(chan *nmeaais.Message),
+	}
+
+	go pa.process()
+	return pa
+}
+
+func (pa *packetAccumulator) process() {
+	for p := range pa.packets {
+		if p.FragmentCount == 1 {
+			packets := []*nmeaais.Packet{p}
+			m, err := nmeaais.Process(packets)
+			if err != nil {
+				log.WithFields(log.Fields{
+					"err":    err,
+					"packet": p.Raw,
+				}).Warn("Failed to process packet into message")
+			}
+			pa.messages <- m
+		}
 	}
 }
