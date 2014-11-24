@@ -25,7 +25,22 @@ func main() {
 		for m := range pa.messages {
 			switch m.MessageType {
 			case 1:
+				fallthrough
+			case 2:
+				fallthrough
+			case 3:
 				x, err := m.GetAsPositionReportClassA()
+				if err != nil {
+					log.WithFields(log.Fields{
+						"err":     err,
+						"message": m,
+					}).Warn("Couldn't get specific message type")
+					break
+				}
+				spew.Dump(x)
+				break
+			case 4:
+				x, err := m.GetAsBaseStationReport()
 				if err != nil {
 					log.WithFields(log.Fields{
 						"err":     err,
