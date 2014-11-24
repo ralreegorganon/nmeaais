@@ -1,5 +1,7 @@
 package nmeaais
 
+import "strings"
+
 func unarmor(payload []byte) []byte {
 	var bitLength uint = 0
 	unarmored := make([]byte, len(payload))
@@ -58,4 +60,22 @@ func pow(a, b uint) uint {
 		a *= a
 	}
 	return p
+}
+
+const stringChars string = "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^- !\"#$%&'()*+,-./0123456789:;<=>?"
+
+func asString(unarmoredPayload []byte, start uint, width uint) string {
+	value := ""
+	for i := uint(0); i < width/6; i++ {
+		position := asUInt(unarmoredPayload, start+6*i, 6)
+		messageChar := stringChars[position]
+		if string(messageChar) == "@" {
+			break
+		} else {
+			value += string(messageChar)
+		}
+	}
+
+	value = strings.TrimSpace(strings.Replace(value, "@", " ", -1))
+	return value
 }

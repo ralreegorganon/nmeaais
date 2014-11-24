@@ -70,4 +70,18 @@ func TestNmeaMessageBittwiddling(t *testing.T) {
 			So(values, ShouldResemble, expected)
 		})
 	})
+
+	Convey("When extracting a string from an unarmored payload", t, func() {
+		unarmored := unarmor([]byte("H42O55i18tMET00000000000000"))
+		values := []string{
+			asString(unarmored, 40, 120),
+		}
+		Convey("The extracted values should be correct", func() {
+			expected := []string{
+				"PROGUY",
+			}
+			So(values, ShouldResemble, expected)
+		})
+
+	})
 }

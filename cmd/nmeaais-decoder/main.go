@@ -50,8 +50,36 @@ func main() {
 				}
 				spew.Dump(x)
 				break
+			case 24:
+				if ok, _ := m.IsStaticDataReportA(); ok {
+					x, err := m.GetAsStaticDataReportA()
+					if err != nil {
+						log.WithFields(log.Fields{
+							"err":     err,
+							"message": m,
+						}).Warn("Couldn't get specific message type")
+						break
+					}
+					spew.Dump(x)
+				}
+				if ok, _ := m.IsStaticDataReportB(); ok {
+					x, err := m.GetAsStaticDataReportB()
+					if err != nil {
+						log.WithFields(log.Fields{
+							"err":     err,
+							"message": m,
+						}).Warn("Couldn't get specific message type")
+						break
+					}
+					spew.Dump(x)
+				}
+				break
 			default:
 				fmt.Printf("Unsupported message of type %v from %v\n", m.MessageType, m.MMSI)
+				for _, p := range m.Packets {
+					fmt.Printf("%v\n", p.Raw)
+				}
+				fmt.Println()
 				break
 			}
 		}
