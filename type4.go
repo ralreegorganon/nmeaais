@@ -48,7 +48,7 @@ func (m *Message) GetAsBaseStationReport() (*BaseStationReport, error) {
 	return p, nil
 }
 
-var epfdTypes []string = []string{
+var epfdTypes = []string{
 	"Undefined",
 	"GPS",
 	"GLONASS",
@@ -71,7 +71,6 @@ var epfdTypesMax = uint(len(epfdTypes) - 1)
 func epfdType(et uint) string {
 	if et < 0 || et > epfdTypesMax {
 		return "Undefined"
-	} else {
-		return epfdTypes[et]
 	}
+	return epfdTypes[et]
 }

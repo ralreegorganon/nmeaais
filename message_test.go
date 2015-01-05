@@ -8,7 +8,7 @@ import (
 )
 
 func buildPackets(raws []string) []*Packet {
-	packets := make([]*Packet, 0)
+	var packets []*Packet
 	for _, raw := range raws {
 		packet, err := Parse(raw)
 		if err != nil {

@@ -114,13 +114,12 @@ func (m *Message) GetAsStaticDataReportB() (*StaticDataReportB, error) {
 func shipType(st uint) string {
 	if st < 0 || st > shipTypesMax {
 		return "Undefined"
-	} else {
-		return shipTypes[st]
 	}
+	return shipTypes[st]
 }
 
 var shipTypesMax = uint(len(shipTypes) - 1)
-var shipTypes []string = []string{
+var shipTypes = []string{
 	"Not available",
 	"Reserved for future use",
 	"Reserved for future use",

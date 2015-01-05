@@ -56,7 +56,7 @@ func (m *Message) GetAsPositionReportClassA() (*PositionReportClassA, error) {
 	return p, nil
 }
 
-var navigationStatuses []string = []string{
+var navigationStatuses = []string{
 	"Under way using engine",
 	"At anchor",
 	"Not under command",
@@ -79,9 +79,8 @@ var navigationStatusesMax = uint(len(navigationStatuses) - 1)
 func navigationStatus(ns uint) string {
 	if ns < 0 || ns > navigationStatusesMax {
 		return "Not defined"
-	} else {
-		return navigationStatuses[ns]
 	}
+	return navigationStatuses[ns]
 }
 
 func rateOfTurn(rot int) float64 {

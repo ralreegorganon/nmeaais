@@ -113,7 +113,7 @@ func TestNmeaPacketParsing(t *testing.T) {
 					So(packet.FragmentNumber, ShouldEqual, 1)
 				})
 				Convey("Where the sequential message number is correct", func() {
-					So(packet.SequentialMessageId, ShouldEqual, 0)
+					So(packet.SequentialMessageID, ShouldEqual, 0)
 				})
 				Convey("Where the radio channel is correct", func() {
 					So(packet.RadioChannel, ShouldEqual, "B")

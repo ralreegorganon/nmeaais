@@ -46,7 +46,7 @@ func (m *Message) validateMultipart() error {
 			return errors.New("nmeaais: message packet out sequence")
 		}
 
-		uniqueSequences[p.SequentialMessageId] = true
+		uniqueSequences[p.SequentialMessageID] = true
 	}
 
 	if len(uniqueSequences) > 1 {

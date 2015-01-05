@@ -14,7 +14,7 @@ type Packet struct {
 	Tag                 string
 	FragmentCount       int64
 	FragmentNumber      int64
-	SequentialMessageId int64
+	SequentialMessageID int64
 	RadioChannel        string
 	Payload             string
 	FillBits            int64
@@ -37,7 +37,7 @@ func Parse(raw string) (*Packet, error) {
 	if partsCount != 7 {
 		return nil, fmt.Errorf("nmeaais: has %v parts instead of 7", partsCount)
 	}
-	for i, _ := range parts {
+	for i := range parts {
 		parts[i] = strings.TrimSpace(parts[i])
 	}
 
@@ -61,7 +61,7 @@ func Parse(raw string) (*Packet, error) {
 		return nil, err
 	}
 
-	err = packet.parseSequentialMessageId(parts[3])
+	err = packet.parseSequentialMessageID(parts[3])
 	if err != nil {
 		return nil, err
 	}
@@ -117,13 +117,13 @@ func (p *Packet) parseFragmentNumber(part string) error {
 	return nil
 }
 
-func (p *Packet) parseSequentialMessageId(part string) error {
+func (p *Packet) parseSequentialMessageID(part string) error {
 	if part != "" {
-		sequentialMessageId, err := strconv.ParseInt(part, 10, 64)
+		sequentialMessageID, err := strconv.ParseInt(part, 10, 64)
 		if err != nil {
 			return err
 		}
-		p.SequentialMessageId = sequentialMessageId
+		p.SequentialMessageID = sequentialMessageID
 	}
 	return nil
 }
@@ -161,7 +161,7 @@ func (p *Packet) parseFillBits(part string) error {
 func (p *Packet) validate() error {
 	rawForChecksum := strings.TrimSuffix(strings.TrimPrefix(p.Raw, p.StartDelimiter), "*"+p.Checksum)
 
-	var checksum uint8 = 0
+	var checksum uint8
 	for i := 0; i < len(rawForChecksum); i++ {
 		checksum = checksum ^ rawForChecksum[i]
 	}

@@ -3,7 +3,7 @@ package nmeaais
 import "strings"
 
 func unarmor(payload []byte) []byte {
-	var bitLength uint = 0
+	var bitLength uint
 	unarmored := make([]byte, len(payload))
 
 	for _, s := range payload {
@@ -16,7 +16,7 @@ func unarmor(payload []byte) []byte {
 			if (s>>byte(i))&1 == 1 {
 				unarmored[bitLength/8] |= (1 << (7 - bitLength%8))
 			}
-			bitLength += 1
+			bitLength++
 		}
 	}
 
