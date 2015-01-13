@@ -23,7 +23,17 @@ type PositionReportClassA struct {
 	RadioStatus       int64
 }
 
-func (m *Message) GetAsPositionReportClassA() (*PositionReportClassA, error) {
+func (m *Message) GetAsPositionReportClassA() (p *PositionReportClassA, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			p = nil
+			var ok bool
+			err, ok = r.(error)
+			if !ok {
+				err = fmt.Errorf("pkg: %v", r)
+			}
+		}
+	}()
 
 	switch m.MessageType {
 	case 1:
@@ -36,7 +46,7 @@ func (m *Message) GetAsPositionReportClassA() (*PositionReportClassA, error) {
 		return nil, fmt.Errorf("nmeaais: tried to get message as type 1, 2, or 3, but is type %v", m.MessageType)
 	}
 
-	p := &PositionReportClassA{
+	p = &PositionReportClassA{
 		MessageType:       m.MessageType,
 		RepeatIndicator:   m.RepeatIndicator,
 		MMSI:              m.MMSI,
@@ -53,7 +63,8 @@ func (m *Message) GetAsPositionReportClassA() (*PositionReportClassA, error) {
 		RAIM:              asBool(asUInt(m.unarmoredPayload, 148, 1)),
 		RadioStatus:       int64(asUInt(m.unarmoredPayload, 149, 19)),
 	}
-	return p, nil
+
+	return
 }
 
 var navigationStatuses = []string{

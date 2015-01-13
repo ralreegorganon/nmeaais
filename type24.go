@@ -28,21 +28,32 @@ func (m *Message) IsStaticDataReportA() (bool, error) {
 	}
 }
 
-func (m *Message) GetAsStaticDataReportA() (*StaticDataReportA, error) {
+func (m *Message) GetAsStaticDataReportA() (p *StaticDataReportA, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			p = nil
+			var ok bool
+			err, ok = r.(error)
+			if !ok {
+				err = fmt.Errorf("pkg: %v", r)
+			}
+		}
+	}()
+
 	var validMessageType int64 = 24
 
 	if m.MessageType != validMessageType {
 		return nil, fmt.Errorf("nmeaais: tried to get message as type %v, but is type %v", validMessageType, m.MessageType)
 	}
 
-	p := &StaticDataReportA{
+	p = &StaticDataReportA{
 		MessageType:     m.MessageType,
 		RepeatIndicator: m.RepeatIndicator,
 		MMSI:            m.MMSI,
 		PartNumber:      int64(asUInt(m.unarmoredPayload, 38, 2)),
 		VesselName:      asString(m.unarmoredPayload, 40, 120),
 	}
-	return p, nil
+	return
 }
 
 type StaticDataReportB struct {
@@ -80,14 +91,25 @@ func (m *Message) IsStaticDataReportB() (bool, error) {
 	}
 }
 
-func (m *Message) GetAsStaticDataReportB() (*StaticDataReportB, error) {
+func (m *Message) GetAsStaticDataReportB() (p *StaticDataReportB, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			p = nil
+			var ok bool
+			err, ok = r.(error)
+			if !ok {
+				err = fmt.Errorf("pkg: %v", r)
+			}
+		}
+	}()
+
 	var validMessageType int64 = 24
 
 	if m.MessageType != validMessageType {
 		return nil, fmt.Errorf("nmeaais: tried to get message as type %v, but is type %v", validMessageType, m.MessageType)
 	}
 
-	p := &StaticDataReportB{
+	p = &StaticDataReportB{
 		MessageType:     m.MessageType,
 		RepeatIndicator: m.RepeatIndicator,
 		MMSI:            m.MMSI,
@@ -108,7 +130,7 @@ func (m *Message) GetAsStaticDataReportB() (*StaticDataReportB, error) {
 		p.DimensionToPort = int64(asUInt(m.unarmoredPayload, 150, 6))
 		p.DimensionToStarboard = int64(asUInt(m.unarmoredPayload, 156, 6))
 	}
-	return p, nil
+	return
 }
 
 func shipType(st uint) string {

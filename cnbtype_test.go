@@ -49,4 +49,25 @@ func TestType1MessageProcessing(t *testing.T) {
 			So(type1, ShouldResemble, expected)
 		})
 	})
+
+	Convey("When processing an invalid cnb type (1,2,3) message", t, func() {
+		raws := []string{
+			"!AIVDM,1,1,,A,13n;;V001`0q,0*0C",
+		}
+
+		packets := buildPackets(raws)
+		message, err := Process(packets)
+		type1, err := message.GetAsPositionReportClassA()
+
+		Convey("The get should return a cnb type (1,2,3) message", func() {
+			Convey("Where the message is nil", func() {
+				So(type1, ShouldBeNil)
+			})
+		})
+
+		Convey("The get should return an error", func() {
+			So(err, ShouldNotBeNil)
+		})
+
+	})
 }

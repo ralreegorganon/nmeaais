@@ -18,14 +18,25 @@ type BaseStationReport struct {
 	RadioStatus      int64
 }
 
-func (m *Message) GetAsBaseStationReport() (*BaseStationReport, error) {
+func (m *Message) GetAsBaseStationReport() (p *BaseStationReport, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			p = nil
+			var ok bool
+			err, ok = r.(error)
+			if !ok {
+				err = fmt.Errorf("pkg: %v", r)
+			}
+		}
+	}()
+
 	var validMessageType int64 = 4
 
 	if m.MessageType != validMessageType {
 		return nil, fmt.Errorf("nmeaais: tried to get message as type 4, but is type %v", m.MessageType)
 	}
 
-	p := &BaseStationReport{
+	p = &BaseStationReport{
 		MessageType:     m.MessageType,
 		RepeatIndicator: m.RepeatIndicator,
 		MMSI:            m.MMSI,
@@ -45,7 +56,7 @@ func (m *Message) GetAsBaseStationReport() (*BaseStationReport, error) {
 		RAIM:             asBool(asUInt(m.unarmoredPayload, 148, 1)),
 		RadioStatus:      int64(asUInt(m.unarmoredPayload, 149, 19)),
 	}
-	return p, nil
+	return
 }
 
 var epfdTypes = []string{
