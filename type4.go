@@ -58,30 +58,3 @@ func (m *Message) GetAsBaseStationReport() (p *BaseStationReport, err error) {
 	}
 	return
 }
-
-var epfdTypes = []string{
-	"Undefined",
-	"GPS",
-	"GLONASS",
-	"Combined GPS/GLONASS",
-	"Loran-C",
-	"Chayka",
-	"Integrated navigation system",
-	"Surveyed",
-	"Galileo",
-	"Undefined",
-	"Undefined",
-	"Undefined",
-	"Undefined",
-	"Undefined",
-	"Undefined",
-	"Undefined",
-}
-var epfdTypesMax = uint(len(epfdTypes) - 1)
-
-func epfdType(et uint) string {
-	if et < 0 || et > epfdTypesMax {
-		return "Undefined"
-	}
-	return epfdTypes[et]
-}
