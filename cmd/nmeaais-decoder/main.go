@@ -12,6 +12,7 @@ import (
 )
 
 var source = flag.String("source", "localhost:32779", "TCP source for AIS data")
+var debug = flag.Bool("debug", false, "Run in debug mode")
 
 func init() {
 	log.SetLevel(log.WarnLevel)
@@ -19,6 +20,15 @@ func init() {
 
 func main() {
 	flag.Parse()
+
+	output := make(chan interface{})
+	go func() {
+		for m := range output {
+			if *debug {
+				spew.Dump(m)
+			}
+		}
+	}()
 
 	pa := newPacketAccumulator()
 	go func() {
@@ -37,7 +47,7 @@ func main() {
 					}).Warn("Couldn't get specific message type")
 					break
 				}
-				spew.Dump(x)
+				output <- x
 				break
 			case 4:
 				x, err := m.GetAsBaseStationReport()
@@ -48,7 +58,7 @@ func main() {
 					}).Warn("Couldn't get specific message type")
 					break
 				}
-				spew.Dump(x)
+				output <- x
 				break
 			case 24:
 				if ok, _ := m.IsStaticDataReportA(); ok {
@@ -60,7 +70,7 @@ func main() {
 						}).Warn("Couldn't get specific message type")
 						break
 					}
-					spew.Dump(x)
+					output <- x
 				}
 				if ok, _ := m.IsStaticDataReportB(); ok {
 					x, err := m.GetAsStaticDataReportB()
@@ -71,7 +81,7 @@ func main() {
 						}).Warn("Couldn't get specific message type")
 						break
 					}
-					spew.Dump(x)
+					output <- x
 				}
 				break
 			default:
