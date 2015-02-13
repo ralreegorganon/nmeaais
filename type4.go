@@ -33,7 +33,7 @@ func (m *Message) GetAsBaseStationReport() (p *BaseStationReport, err error) {
 	var validMessageType int64 = 4
 
 	if m.MessageType != validMessageType {
-		return nil, fmt.Errorf("nmeaais: tried to get message as type 4, but is type %v", m.MessageType)
+		return nil, fmt.Errorf("nmeaais: tried to get message as type %v, but is type %v", validMessageType, m.MessageType)
 	}
 
 	p = &BaseStationReport{

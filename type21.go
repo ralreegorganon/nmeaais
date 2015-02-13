@@ -39,7 +39,7 @@ func (m *Message) GetAsAidToNavigationReport() (p *AidToNavigationReport, err er
 	var validMessageType int64 = 21
 
 	if m.MessageType != validMessageType {
-		return nil, fmt.Errorf("nmeaais: tried to get message as type 21, but is type %v", m.MessageType)
+		return nil, fmt.Errorf("nmeaais: tried to get message as type %v, but is type %v", validMessageType, m.MessageType)
 	}
 
 	p = &AidToNavigationReport{
