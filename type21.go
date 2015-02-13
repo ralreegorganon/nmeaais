@@ -1,0 +1,110 @@
+package nmeaais
+
+import "fmt"
+
+type AidToNavigationReport struct {
+	MessageType          int64
+	RepeatIndicator      int64
+	MMSI                 int64
+	AidType              string
+	Name                 string
+	PositionAccuracy     bool
+	Longitude            float64
+	Latitude             float64
+	DimensionToBow       int64
+	DimensionToStern     int64
+	DimensionToPort      int64
+	DimensionToStarboard int64
+	EPFDType             string
+	UTCSecond            int64
+	OffPositionIndicator bool
+	RAIM                 bool
+	VirtualAid           bool
+	AssignedMode         bool
+	NameExtension        string
+}
+
+func (m *Message) GetAsAidToNavigationReport() (p *AidToNavigationReport, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			p = nil
+			var ok bool
+			err, ok = r.(error)
+			if !ok {
+				err = fmt.Errorf("pkg: %v", r)
+			}
+		}
+	}()
+
+	var validMessageType int64 = 21
+
+	if m.MessageType != validMessageType {
+		return nil, fmt.Errorf("nmeaais: tried to get message as type 21, but is type %v", m.MessageType)
+	}
+
+	p = &AidToNavigationReport{
+		MessageType:          m.MessageType,
+		RepeatIndicator:      m.RepeatIndicator,
+		MMSI:                 m.MMSI,
+		AidType:              aidType(asUInt(m.unarmoredPayload, 38, 5)),
+		Name:                 asString(m.unarmoredPayload, 43, 120),
+		PositionAccuracy:     asBool(asUInt(m.unarmoredPayload, 78, 1)),
+		Longitude:            latlon(asInt(m.unarmoredPayload, 79, 28)),
+		Latitude:             latlon(asInt(m.unarmoredPayload, 107, 27)),
+		DimensionToBow:       int64(asUInt(m.unarmoredPayload, 219, 9)),
+		DimensionToStern:     int64(asUInt(m.unarmoredPayload, 228, 9)),
+		DimensionToPort:      int64(asUInt(m.unarmoredPayload, 237, 6)),
+		DimensionToStarboard: int64(asUInt(m.unarmoredPayload, 243, 6)),
+		EPFDType:             epfdType(asUInt(m.unarmoredPayload, 249, 4)),
+		UTCSecond:            int64(asUInt(m.unarmoredPayload, 253, 6)),
+		OffPositionIndicator: asBool(asUInt(m.unarmoredPayload, 259, 1)),
+		RAIM:                 asBool(asUInt(m.unarmoredPayload, 268, 1)),
+		VirtualAid:           asBool(asUInt(m.unarmoredPayload, 269, 1)),
+		AssignedMode:         asBool(asUInt(m.unarmoredPayload, 270, 1)),
+		NameExtension:        asString(m.unarmoredPayload, 272, 88),
+	}
+	return
+}
+
+var aidTypes = []string{
+	"Default, Type of Aid to Navigation not specified",
+	"Reference point",
+	"RACON (radar transponder marking a navigation hazard)",
+	"Fixed structure off shore, such as oil platforms, wind farms,rigs.",
+	"Spare, Reserved for future use.",
+	"Light, without sectors",
+	"Light, with sectors",
+	"Leading Light Front",
+	"Leading Light Rear",
+	"Beacon, Cardinal N",
+	"Beacon, Cardinal E",
+	"Beacon, Cardinal S",
+	"Beacon, Cardinal W",
+	"Beacon, Port hand",
+	"Beacon, Starboard hand",
+	"Beacon, Preferred Channel port hand",
+	"Beacon, Preferred Channel starboard hand",
+	"Beacon, Isolated danger",
+	"Beacon, Safe water",
+	"Beacon, Special mark",
+	"Cardinal Mark N",
+	"Cardinal Mark E",
+	"Cardinal Mark S",
+	"Cardinal Mark W",
+	"Port hand Mark",
+	"Starboard hand Mark",
+	"Preferred Channel Port hand",
+	"Preferred Channel Starboard hand",
+	"Isolated danger",
+	"Safe Water",
+	"Special Mark",
+	"Light Vessel / LANBY / Rigs",
+}
+var aidTypesMax = uint(len(aidTypes) - 1)
+
+func aidType(at uint) string {
+	if at < 0 || at > aidTypesMax {
+		return "Undefined"
+	}
+	return aidTypes[at]
+}
