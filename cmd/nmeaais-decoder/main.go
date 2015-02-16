@@ -167,17 +167,28 @@ func newPacketAccumulator() *packetAccumulator {
 }
 
 func (pa *packetAccumulator) process() {
+	packetBuffer := make(map[int64][]*nmeaais.Packet)
 	for p := range pa.packets {
 		if p.FragmentCount == 1 {
 			packets := []*nmeaais.Packet{p}
-			m, err := nmeaais.Process(packets)
-			if err != nil {
-				log.WithFields(log.Fields{
-					"err":    err,
-					"packet": p.Raw,
-				}).Warn("Failed to process packet into message")
+			pa.processAccumulatedPackets(packets)
+		} else {
+			packetBuffer[p.SequentialMessageID] = append(packetBuffer[p.SequentialMessageID], p)
+			if p.FragmentCount == int64(len(packetBuffer[p.SequentialMessageID])) {
+				pa.processAccumulatedPackets(packetBuffer[p.SequentialMessageID])
+				delete(packetBuffer, p.SequentialMessageID)
 			}
-			pa.messages <- m
 		}
 	}
+}
+
+func (pa *packetAccumulator) processAccumulatedPackets(p []*nmeaais.Packet) {
+	m, err := nmeaais.Process(p)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"err":     err,
+			"packets": p,
+		}).Warn("Failed to process packet into message")
+	}
+	pa.messages <- m
 }
