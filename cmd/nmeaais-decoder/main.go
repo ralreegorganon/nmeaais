@@ -60,6 +60,17 @@ func main() {
 				}
 				output <- x
 				break
+			case 5:
+				x, err := m.GetAsStaticAndVoyageRelatedData()
+				if err != nil {
+					log.WithFields(log.Fields{
+						"err":     err,
+						"message": m,
+					}).Warn("Couldn't get specific message type")
+					break
+				}
+				output <- x
+				break
 			case 21:
 				x, err := m.GetAsAidToNavigationReport()
 				if err != nil {
