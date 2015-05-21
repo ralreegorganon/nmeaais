@@ -2,7 +2,6 @@ package nmeaais
 
 import (
 	"fmt"
-	"math"
 )
 
 type PositionReportClassA struct {
@@ -65,65 +64,4 @@ func (m *Message) GetAsPositionReportClassA() (p *PositionReportClassA, err erro
 	}
 
 	return
-}
-
-var navigationStatuses = []string{
-	"Under way using engine",
-	"At anchor",
-	"Not under command",
-	"Restricted manoeuverability",
-	"Constrained by her draught",
-	"Moored",
-	"Aground",
-	"Engaged in Fishing",
-	"Under way sailing",
-	"Reserved for future amendment of Navigational Status for HSC",
-	"Reserved for future amendment of Navigational Status for WIG",
-	"Reserved for future use",
-	"Reserved for future use",
-	"Reserved for future use",
-	"AIS-SART is active",
-	"Not defined",
-}
-var navigationStatusesMax = uint(len(navigationStatuses) - 1)
-
-func navigationStatus(ns uint) string {
-	if ns < 0 || ns > navigationStatusesMax {
-		return "Not defined"
-	}
-	return navigationStatuses[ns]
-}
-
-func rateOfTurn(rot int) float64 {
-	if rot == 128 {
-		return math.NaN()
-	}
-	if rot == 127 || rot == -127 {
-		return math.Inf(rot)
-	}
-	floatified := float64(rot)
-	value := floatified / 4.733
-	value *= value
-	return math.Copysign(value, floatified)
-}
-
-func speedOverGround(sog uint) float64 {
-	return float64(sog) / 10
-}
-
-func courseOverGround(cog uint) float64 {
-	return float64(cog) / 10
-}
-
-func maneuverIndicator(mi uint) string {
-	switch mi {
-	case 0:
-		return "Not available"
-	case 1:
-		return "No special maneuver"
-	case 2:
-		return "Special maneuver"
-	default:
-		return "Not available"
-	}
 }

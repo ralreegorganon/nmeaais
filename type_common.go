@@ -1,5 +1,9 @@
 package nmeaais
 
+import (
+	"math"
+)
+
 func asBool(b uint) bool {
 	if b == 1 {
 		return true
@@ -12,6 +16,41 @@ func latlon(l int) float64 {
 	return float64(l) / 600000
 }
 
+func rateOfTurn(rot int) float64 {
+	if rot == 128 {
+		return math.NaN()
+	}
+	if rot == 127 || rot == -127 {
+		return math.Inf(rot)
+	}
+	floatified := float64(rot)
+	value := floatified / 4.733
+	value *= value
+	return math.Copysign(value, floatified)
+}
+
+func speedOverGround(sog uint) float64 {
+	return float64(sog) / 10
+}
+
+func courseOverGround(cog uint) float64 {
+	return float64(cog) / 10
+}
+
+func maneuverIndicator(mi uint) string {
+	switch mi {
+	case 0:
+		return "Not available"
+	case 1:
+		return "No special maneuver"
+	case 2:
+		return "Special maneuver"
+	default:
+		return "Not available"
+	}
+}
+
+var aidTypesMax = uint(len(aidTypes) - 1)
 var aidTypes = []string{
 	"Default, Type of Aid to Navigation not specified",
 	"Reference point",
@@ -46,20 +85,12 @@ var aidTypes = []string{
 	"Special Mark",
 	"Light Vessel / LANBY / Rigs",
 }
-var aidTypesMax = uint(len(aidTypes) - 1)
 
 func aidType(at uint) string {
 	if at < 0 || at > aidTypesMax {
 		return "Undefined"
 	}
 	return aidTypes[at]
-}
-
-func shipType(st uint) string {
-	if st < 0 || st > shipTypesMax {
-		return "Undefined"
-	}
-	return shipTypes[st]
 }
 
 var shipTypesMax = uint(len(shipTypes) - 1)
@@ -166,6 +197,14 @@ var shipTypes = []string{
 	"Other Type, no additional information",
 }
 
+func shipType(st uint) string {
+	if st < 0 || st > shipTypesMax {
+		return "Undefined"
+	}
+	return shipTypes[st]
+}
+
+var epfdTypesMax = uint(len(epfdTypes) - 1)
 var epfdTypes = []string{
 	"Undefined",
 	"GPS",
@@ -184,11 +223,37 @@ var epfdTypes = []string{
 	"Undefined",
 	"Undefined",
 }
-var epfdTypesMax = uint(len(epfdTypes) - 1)
 
 func epfdType(et uint) string {
 	if et < 0 || et > epfdTypesMax {
 		return "Undefined"
 	}
 	return epfdTypes[et]
+}
+
+var navigationStatusesMax = uint(len(navigationStatuses) - 1)
+var navigationStatuses = []string{
+	"Under way using engine",
+	"At anchor",
+	"Not under command",
+	"Restricted manoeuverability",
+	"Constrained by her draught",
+	"Moored",
+	"Aground",
+	"Engaged in Fishing",
+	"Under way sailing",
+	"Reserved for future amendment of Navigational Status for HSC",
+	"Reserved for future amendment of Navigational Status for WIG",
+	"Reserved for future use",
+	"Reserved for future use",
+	"Reserved for future use",
+	"AIS-SART is active",
+	"Not defined",
+}
+
+func navigationStatus(ns uint) string {
+	if ns < 0 || ns > navigationStatusesMax {
+		return "Not defined"
+	}
+	return navigationStatuses[ns]
 }
