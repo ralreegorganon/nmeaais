@@ -2,7 +2,7 @@ package nmeaais
 
 import "strings"
 
-func unarmor(payload []byte) []byte {
+func unarmor(payload []byte) ([]byte, int64) {
 	var bitLength uint
 	unarmored := make([]byte, len(payload))
 
@@ -20,7 +20,7 @@ func unarmor(payload []byte) []byte {
 		}
 	}
 
-	return unarmored
+	return unarmored, int64(bitLength)
 }
 
 const bpb uint = 8

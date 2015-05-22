@@ -8,6 +8,7 @@ import (
 type Message struct {
 	Packets          []*Packet
 	unarmoredPayload []byte
+	bitLength        int64
 	MessageType      int64
 	RepeatIndicator  int64
 	MMSI             int64
@@ -64,7 +65,7 @@ func (m *Message) unarmorPayload() error {
 	}
 
 	completeBytes := []byte(complete)
-	m.unarmoredPayload = unarmor(completeBytes)
+	m.unarmoredPayload, m.bitLength = unarmor(completeBytes)
 
 	return nil
 }

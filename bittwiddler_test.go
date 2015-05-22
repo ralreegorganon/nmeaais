@@ -11,16 +11,17 @@ func TestNmeaMessageBittwiddling(t *testing.T) {
 	payload := "133m@ogP00PD;88MD5MTDww@2D7k"
 
 	Convey("When unarmoring a payload", t, func() {
-		unarmored := unarmor([]byte(payload))
+		unarmored, bitLength := unarmor([]byte(payload))
 		Convey("The payload should unarmor correctly", func() {
 			value := fmt.Sprintf("%x", unarmored)
 			expected := "0430f5437be00008142c821d50576453ffd00941f300000000000000"
 			So(value, ShouldEqual, expected)
+			So(bitLength, ShouldEqual, 168)
 		})
 	})
 
 	Convey("When extracting unsigned ints from an unarmored payload", t, func() {
-		unarmored := unarmor([]byte(payload))
+		unarmored, _ := unarmor([]byte(payload))
 
 		values := []uint{
 			asUInt(unarmored, 0, 6),
@@ -54,7 +55,7 @@ func TestNmeaMessageBittwiddling(t *testing.T) {
 	})
 
 	Convey("When extracting signed ints from an unarmored payload", t, func() {
-		unarmored := unarmor([]byte(payload))
+		unarmored, _ := unarmor([]byte(payload))
 
 		values := []int{
 			asInt(unarmored, 42, 8),
@@ -72,7 +73,7 @@ func TestNmeaMessageBittwiddling(t *testing.T) {
 	})
 
 	Convey("When extracting a string from an unarmored payload", t, func() {
-		unarmored := unarmor([]byte("H42O55i18tMET00000000000000"))
+		unarmored, _ := unarmor([]byte("H42O55i18tMET00000000000000"))
 		values := []string{
 			asString(unarmored, 40, 120),
 		}
