@@ -71,6 +71,17 @@ func main() {
 				}
 				output <- x
 				break
+			case 8:
+				x, err := m.GetAsBinaryBroadcastMessage()
+				if err != nil {
+					log.WithFields(log.Fields{
+						"err":     err,
+						"message": m,
+					}).Warn("Couldn't get specific message type")
+					break
+				}
+				output <- x
+				break
 			case 15:
 				x, err := m.GetAsInterrogation()
 				if err != nil {

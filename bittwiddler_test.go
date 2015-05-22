@@ -83,6 +83,19 @@ func TestNmeaMessageBittwiddling(t *testing.T) {
 			}
 			So(values, ShouldResemble, expected)
 		})
-
 	})
+
+	Convey("When extracting a binary from an unarmored payload", t, func() {
+		unarmored, bitLength := unarmor([]byte("85Mwqd1Kf4dldnKQ<>bW6RGmDu<6U5f1>W<LMGV85qe;dkv@rN5h"))
+		values := [][]byte{
+			asBinary(unarmored, 56, uint(bitLength-56)),
+		}
+
+		Convey("The extracted values should be correct", func() {
+			value := fmt.Sprintf("%x", values[0])
+			expected := "4b34b366e130eaa71a25f553d306945b813a731c757988179b4bb33f90e9e170"
+			So(value, ShouldEqual, expected)
+		})
+	})
+
 }

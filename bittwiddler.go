@@ -79,3 +79,11 @@ func asString(unarmoredPayload []byte, start uint, width uint) string {
 	value = strings.TrimSpace(strings.Replace(value, "@", " ", -1))
 	return value
 }
+
+func asBinary(unarmoredPayload []byte, start uint, width uint) []byte {
+	var data []byte
+	for i := uint(0); i < width/8; i++ {
+		data = append(data, byte(asUInt(unarmoredPayload, start+8*i, 8)))
+	}
+	return data
+}
