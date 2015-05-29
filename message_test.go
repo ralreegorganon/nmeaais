@@ -105,22 +105,20 @@ func TestNmeaMessageProcessing(t *testing.T) {
 		})
 	})
 
-	Convey("When processing a single-part message", t, func() {
-		Convey("That is a valid NMEA 0183 format", func() {
+	Convey("When processing a message", t, func() {
+		Convey("That has an empty payload", func() {
 			raws := []string{
-				"!AIVDM,1,1,,A,133m@ogP00PD;88MD5MTDww@2D7k,0*46",
+				"!AIVDM,1,1,,A,,0*26",
 			}
 
 			packets := buildPackets(raws)
 			message, err := Process(packets)
 
-			Convey("The processor should return a message", func() {
-				Convey("Where the message is not nil", func() {
-					So(message, ShouldNotBeNil)
-				})
+			Convey("The processor should return nil for the message", func() {
+				So(message, ShouldBeNil)
 			})
-			Convey("The processor should not return an error", func() {
-				So(err, ShouldBeNil)
+			Convey("The processor should return an error", func() {
+				So(err, ShouldNotBeNil)
 			})
 		})
 	})

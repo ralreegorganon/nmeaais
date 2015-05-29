@@ -29,6 +29,10 @@ func Process(packets []*Packet) (*Message, error) {
 		return nil, err
 	}
 
+	if len(message.unarmoredPayload) == 0 {
+		return nil, fmt.Errorf("nmeaais: message has a zero-length payload")
+	}
+
 	message.MessageType = int64(asUInt(message.unarmoredPayload, 0, 6))
 	message.RepeatIndicator = int64(asUInt(message.unarmoredPayload, 6, 2))
 	message.MMSI = int64(asUInt(message.unarmoredPayload, 8, 30))
