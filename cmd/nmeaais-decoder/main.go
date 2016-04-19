@@ -5,6 +5,9 @@ import (
 	"flag"
 	"fmt"
 	"net"
+	"reflect"
+	"strconv"
+	"strings"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/davecgh/go-spew/spew"
@@ -13,19 +16,35 @@ import (
 
 var source = flag.String("source", "localhost:32779", "TCP source for AIS data")
 var debug = flag.Bool("debug", false, "Run in debug mode")
+var debugFilter = flag.String("debugFilter", "", "Comma delimited list of message types to print when debugging")
 
 func init() {
-	log.SetLevel(log.WarnLevel)
+	log.SetLevel(log.InfoLevel)
 }
 
 func main() {
 	flag.Parse()
 
+	filter := make(map[int64]bool)
+
+	df := strings.Split(*debugFilter, ",")
+	for _, s := range df {
+		i, err := strconv.ParseInt(s, 10, 0)
+		if err != nil {
+			continue
+		}
+		filter[i] = true
+	}
+
 	output := make(chan interface{})
 	go func() {
 		for m := range output {
 			if *debug {
-				spew.Dump(m)
+				messageType := reflect.ValueOf(m).Elem().FieldByName("MessageType").Int()
+				_, ok := filter[messageType]
+				if len(filter) == 0 || ok {
+					spew.Dump(m)
+				}
 			}
 		}
 	}()
@@ -33,6 +52,13 @@ func main() {
 	pa := newPacketAccumulator()
 	go func() {
 		for m := range pa.messages {
+			if *debug {
+				_, ok := filter[m.MessageType]
+				if len(filter) == 0 || ok {
+					spew.Dump(m)
+				}
+			}
+
 			switch m.MessageType {
 			case 1:
 				fallthrough
@@ -234,6 +260,7 @@ func (pa *packetAccumulator) processAccumulatedPackets(p []*nmeaais.Packet) {
 			"err":     err,
 			"packets": p,
 		}).Warn("Failed to process packet into message")
+		return
 	}
 	pa.messages <- m
 }
