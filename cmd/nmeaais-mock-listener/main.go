@@ -11,7 +11,7 @@ import (
 
 var port = flag.String("port", "32778", "TCP port to bind to")
 var source = flag.String("source", "nmeadata", "Text file containing NMEA data")
-var interval = flag.Int64("interval", 1000, "Inteval in milliseconds between sentences")
+var interval = flag.Int64("interval", 1000000, "Inteval in nanoseconds between sentences")
 
 func main() {
 	flag.Parse()
@@ -34,7 +34,7 @@ func main() {
 	}
 	defer l.Close()
 
-	ticker := time.NewTicker(time.Duration(*interval) * time.Millisecond)
+	ticker := time.NewTicker(time.Duration(*interval) * time.Nanosecond)
 
 	log.Printf("Serving NMEA data from %v on port %v", *source, *port)
 	for {

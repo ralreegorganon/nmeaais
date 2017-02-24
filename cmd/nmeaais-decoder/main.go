@@ -69,7 +69,7 @@ func main() {
 				if err != nil {
 					log.WithFields(log.Fields{
 						"err":     err,
-						"message": m,
+						"message": spew.Sdump(m),
 					}).Warn("Couldn't get specific message type")
 					break
 				}
@@ -80,7 +80,7 @@ func main() {
 				if err != nil {
 					log.WithFields(log.Fields{
 						"err":     err,
-						"message": m,
+						"message": spew.Sdump(m),
 					}).Warn("Couldn't get specific message type")
 					break
 				}
@@ -91,7 +91,7 @@ func main() {
 				if err != nil {
 					log.WithFields(log.Fields{
 						"err":     err,
-						"message": m,
+						"message": spew.Sdump(m),
 					}).Warn("Couldn't get specific message type")
 					break
 				}
@@ -102,7 +102,7 @@ func main() {
 				if err != nil {
 					log.WithFields(log.Fields{
 						"err":     err,
-						"message": m,
+						"message": spew.Sdump(m),
 					}).Warn("Couldn't get specific message type")
 					break
 				}
@@ -113,7 +113,7 @@ func main() {
 				if err != nil {
 					log.WithFields(log.Fields{
 						"err":     err,
-						"message": m,
+						"message": spew.Sdump(m),
 					}).Warn("Couldn't get specific message type")
 					break
 				}
@@ -124,7 +124,7 @@ func main() {
 				if err != nil {
 					log.WithFields(log.Fields{
 						"err":     err,
-						"message": m,
+						"message": spew.Sdump(m),
 					}).Warn("Couldn't get specific message type")
 					break
 				}
@@ -135,7 +135,7 @@ func main() {
 				if err != nil {
 					log.WithFields(log.Fields{
 						"err":     err,
-						"message": m,
+						"message": spew.Sdump(m),
 					}).Warn("Couldn't get specific message type")
 					break
 				}
@@ -146,7 +146,7 @@ func main() {
 				if err != nil {
 					log.WithFields(log.Fields{
 						"err":     err,
-						"message": m,
+						"message": spew.Sdump(m),
 					}).Warn("Couldn't get specific message type")
 					break
 				}
@@ -158,7 +158,7 @@ func main() {
 				if err != nil {
 					log.WithFields(log.Fields{
 						"err":     err,
-						"message": m,
+						"message": spew.Sdump(m),
 					}).Warn("Couldn't get specific message type")
 					break
 				}
@@ -170,7 +170,7 @@ func main() {
 					if err != nil {
 						log.WithFields(log.Fields{
 							"err":     err,
-							"message": m,
+							"message": spew.Sdump(m),
 						}).Warn("Couldn't get specific message type")
 						break
 					}
@@ -181,7 +181,7 @@ func main() {
 					if err != nil {
 						log.WithFields(log.Fields{
 							"err":     err,
-							"message": m,
+							"message": spew.Sdump(m),
 						}).Warn("Couldn't get specific message type")
 						break
 					}
@@ -213,7 +213,7 @@ func main() {
 			break
 		}
 
-		log.WithField("packet", line).Info("Received packet")
+		log.WithField("packet", line).Debug("Received packet")
 
 		packet, err := nmeaais.Parse(line)
 		if err != nil {
