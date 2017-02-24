@@ -17,6 +17,7 @@ import (
 var source = flag.String("source", "localhost:32779", "TCP source for AIS data")
 var debug = flag.Bool("debug", false, "Run in debug mode")
 var debugFilter = flag.String("debugFilter", "", "Comma delimited list of message types to print when debugging")
+var messageSkipFilter = flag.String("messageSkipFilter", "", "Comma delimited list of message types to skip once identified")
 
 func init() {
 	log.SetLevel(log.InfoLevel)
@@ -34,6 +35,17 @@ func main() {
 			continue
 		}
 		filter[i] = true
+	}
+
+	skipFilter := make(map[int64]bool)
+
+	sf := strings.Split(*messageSkipFilter, ",")
+	for _, s := range sf {
+		i, err := strconv.ParseInt(s, 10, 0)
+		if err != nil {
+			continue
+		}
+		skipFilter[i] = true
 	}
 
 	output := make(chan interface{})
@@ -57,6 +69,11 @@ func main() {
 				if len(filter) == 0 || ok {
 					spew.Dump(m)
 				}
+			}
+
+			_, ok := skipFilter[m.MessageType]
+			if len(skipFilter) > 0 && ok {
+				continue
 			}
 
 			switch m.MessageType {
@@ -256,7 +273,8 @@ func (pa *packetAccumulator) process() {
 			pa.processAccumulatedPackets(packets)
 		} else {
 			packetBuffer[p.SequentialMessageID] = append(packetBuffer[p.SequentialMessageID], p)
-			if p.FragmentCount == int64(len(packetBuffer[p.SequentialMessageID])) {
+			bufferedFragmentCount := int64(len(packetBuffer[p.SequentialMessageID]))
+			if p.FragmentCount == bufferedFragmentCount {
 				pa.processAccumulatedPackets(packetBuffer[p.SequentialMessageID])
 				delete(packetBuffer, p.SequentialMessageID)
 			}
