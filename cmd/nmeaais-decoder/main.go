@@ -119,6 +119,17 @@ func main() {
 				}
 				output <- x
 				break
+			case 16:
+				x, err := m.GetAsAssignmentModeCommand()
+				if err != nil {
+					log.WithFields(log.Fields{
+						"err":     err,
+						"message": m,
+					}).Warn("Couldn't get specific message type")
+					break
+				}
+				output <- x
+				break
 			case 18:
 				x, err := m.GetAsPositionReportClassBStandard()
 				if err != nil {
