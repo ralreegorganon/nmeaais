@@ -48,9 +48,9 @@ func (m *Message) GetAsAidToNavigationReport() (p *AidToNavigationReport, err er
 		MMSI:                 m.MMSI,
 		AidType:              aidType(asUInt(m.unarmoredPayload, 38, 5)),
 		Name:                 asString(m.unarmoredPayload, 43, 120),
-		PositionAccuracy:     asBool(asUInt(m.unarmoredPayload, 78, 1)),
-		Longitude:            latlon(asInt(m.unarmoredPayload, 79, 28)),
-		Latitude:             latlon(asInt(m.unarmoredPayload, 107, 27)),
+		PositionAccuracy:     asBool(asUInt(m.unarmoredPayload, 163, 1)),
+		Longitude:            latlon(asInt(m.unarmoredPayload, 164, 28)),
+		Latitude:             latlon(asInt(m.unarmoredPayload, 192, 27)),
 		DimensionToBow:       int64(asUInt(m.unarmoredPayload, 219, 9)),
 		DimensionToStern:     int64(asUInt(m.unarmoredPayload, 228, 9)),
 		DimensionToPort:      int64(asUInt(m.unarmoredPayload, 237, 6)),
@@ -63,5 +63,6 @@ func (m *Message) GetAsAidToNavigationReport() (p *AidToNavigationReport, err er
 		AssignedMode:         asBool(asUInt(m.unarmoredPayload, 270, 1)),
 		NameExtension:        asString(m.unarmoredPayload, 272, 88),
 	}
+
 	return
 }
