@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"reflect"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -265,6 +266,20 @@ func newPacketAccumulator() *packetAccumulator {
 	return pa
 }
 
+type packets []*nmeaais.Packet
+
+func (slice packets) Len() int {
+	return len(slice)
+}
+
+func (slice packets) Less(i, j int) bool {
+	return slice[i].FragmentNumber < slice[j].FragmentNumber
+}
+
+func (slice packets) Swap(i, j int) {
+	slice[i], slice[j] = slice[j], slice[i]
+}
+
 func (pa *packetAccumulator) process() {
 	packetBuffer := make(map[int64][]*nmeaais.Packet)
 	for p := range pa.packets {
@@ -275,6 +290,7 @@ func (pa *packetAccumulator) process() {
 			packetBuffer[p.SequentialMessageID] = append(packetBuffer[p.SequentialMessageID], p)
 			bufferedFragmentCount := int64(len(packetBuffer[p.SequentialMessageID]))
 			if p.FragmentCount == bufferedFragmentCount {
+				sort.Sort(packets(packetBuffer[p.SequentialMessageID]))
 				pa.processAccumulatedPackets(packetBuffer[p.SequentialMessageID])
 				delete(packetBuffer, p.SequentialMessageID)
 			}
@@ -287,7 +303,7 @@ func (pa *packetAccumulator) processAccumulatedPackets(p []*nmeaais.Packet) {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"err":     err,
-			"packets": p,
+			"packets": spew.Sdump(p),
 		}).Warn("Failed to process packet into message")
 		return
 	}
