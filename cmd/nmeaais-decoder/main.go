@@ -193,6 +193,17 @@ func main() {
 				}
 				output <- x
 				break
+			case 22:
+				x, err := m.GetAsChannelManagement()
+				if err != nil {
+					log.WithFields(log.Fields{
+						"err":     err,
+						"message": spew.Sdump(m),
+					}).Warn("Couldn't get specific message type")
+					break
+				}
+				output <- x
+				break
 			case 24:
 				if ok, _ := m.IsStaticDataReportA(); ok {
 					x, err := m.GetAsStaticDataReportA()
