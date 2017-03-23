@@ -137,6 +137,17 @@ func main() {
 				}
 				output <- x
 				break
+			case 9:
+				x, err := m.GetAsStandardSARAircraftPositionReport()
+				if err != nil {
+					log.WithFields(log.Fields{
+						"err":     err,
+						"message": spew.Sdump(m),
+					}).Warn("Couldn't get specific message type")
+					break
+				}
+				output <- x
+				break
 			case 15:
 				x, err := m.GetAsInterrogation()
 				if err != nil {

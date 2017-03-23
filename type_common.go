@@ -37,6 +37,10 @@ func speedOverGround(sog uint) float64 {
 	return float64(sog) / 10
 }
 
+func speedOverGroundAircraft(sog uint) float64 {
+	return float64(sog)
+}
+
 func courseOverGround(cog uint) float64 {
 	return float64(cog) / 10
 }
