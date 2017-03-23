@@ -115,6 +115,17 @@ func main() {
 				}
 				output <- x
 				break
+			case 7:
+				x, err := m.GetAsBinaryAcknowledge()
+				if err != nil {
+					log.WithFields(log.Fields{
+						"err":     err,
+						"message": spew.Sdump(m),
+					}).Warn("Couldn't get specific message type")
+					break
+				}
+				output <- x
+				break
 			case 8:
 				x, err := m.GetAsBinaryBroadcastMessage()
 				if err != nil {
