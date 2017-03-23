@@ -14,7 +14,7 @@ func TestType16MessageProcessing(t *testing.T) {
 
 		packets := buildPackets(raws)
 		message, err := Process(packets)
-		type15, err := message.GetAsAssignmentModeCommand()
+		type16, err := message.GetAsAssignmentModeCommand()
 
 		expected := &AssignmentModeCommand{
 			MessageType:      16,
@@ -30,7 +30,7 @@ func TestType16MessageProcessing(t *testing.T) {
 
 		Convey("The get should return a type 16 message", func() {
 			Convey("Where the message is not nil", func() {
-				So(type15, ShouldNotBeNil)
+				So(type16, ShouldNotBeNil)
 			})
 		})
 
@@ -39,7 +39,7 @@ func TestType16MessageProcessing(t *testing.T) {
 		})
 
 		Convey("The fields should be populated correctly", func() {
-			So(type15, ShouldResemble, expected)
+			So(type16, ShouldResemble, expected)
 		})
 	})
 }
