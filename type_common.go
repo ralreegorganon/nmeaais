@@ -16,6 +16,10 @@ func latlon(l int) float64 {
 	return float64(l) / 600000
 }
 
+func latlonShort(l int) float64 {
+	return float64(l) / 600
+}
+
 func rateOfTurn(rot int) float64 {
 	if rot == 128 {
 		return math.NaN()
