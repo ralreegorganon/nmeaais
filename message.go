@@ -24,10 +24,7 @@ func Process(packets []*Packet) (*Message, error) {
 		return nil, err
 	}
 
-	err = message.unarmorPayload()
-	if err != nil {
-		return nil, err
-	}
+	message.unarmorPayload()
 
 	if len(message.unarmoredPayload) == 0 {
 		return nil, fmt.Errorf("nmeaais: message has a zero-length payload")
@@ -61,7 +58,7 @@ func (m *Message) validateMultipart() error {
 	return nil
 }
 
-func (m *Message) unarmorPayload() error {
+func (m *Message) unarmorPayload() {
 	complete := ""
 
 	for _, p := range m.Packets {
@@ -70,6 +67,4 @@ func (m *Message) unarmorPayload() error {
 
 	completeBytes := []byte(complete)
 	m.unarmoredPayload, m.bitLength = unarmor(completeBytes)
-
-	return nil
 }
