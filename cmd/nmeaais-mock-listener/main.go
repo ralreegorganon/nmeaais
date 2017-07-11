@@ -11,7 +11,7 @@ import (
 
 var port = flag.String("port", "32778", "TCP port to bind to")
 var source = flag.String("source", "nmeadata", "Text file containing NMEA data")
-var interval = flag.Int64("interval", 1000000, "Inteval in nanoseconds between sentences")
+var interval = flag.Int64("interval", 1000000, "Interval in nanoseconds between sentences")
 
 func main() {
 	flag.Parse()

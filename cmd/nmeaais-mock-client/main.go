@@ -11,7 +11,7 @@ import (
 
 var remote = flag.String("remote", "127.0.0.1:32780", "Remote address to send data to")
 var source = flag.String("source", "nmeadata", "Text file containing NMEA data")
-var interval = flag.Int64("interval", 1000, "Inteval in milliseconds between sentences")
+var interval = flag.Int64("interval", 1000, "Interval in milliseconds between sentences")
 
 func main() {
 	flag.Parse()
