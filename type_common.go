@@ -21,13 +21,10 @@ func latlonShort(l int) float64 {
 }
 
 func rateOfTurn(rot int) float64 {
-	if rot == 128 {
-		return math.NaN()
-	}
-	if rot == 127 || rot == -127 {
-		return math.Inf(rot)
-	}
 	floatified := float64(rot)
+	if rot == 128 || rot == 127 || rot == -127 {
+		return floatified
+	}
 	value := floatified / 4.733
 	value *= value
 	return math.Copysign(value, floatified)

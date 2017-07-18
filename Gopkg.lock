@@ -2,12 +2,6 @@
 
 
 [[projects]]
-  name = "github.com/Sirupsen/logrus"
-  packages = ["."]
-  revision = "7f976d3a76720c4c27af2ba716b85d2e0a7e38b1"
-  version = "v1.0.1"
-
-[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
@@ -24,6 +18,12 @@
   packages = ["."]
   revision = "77f18212c9c7edc9bd6a33d383a7b545ce62f064"
   version = "v4.2.1"
+
+[[projects]]
+  name = "github.com/sirupsen/logrus"
+  packages = ["."]
+  revision = "a3f95b5c423586578a4e099b11a46c2479628cac"
+  version = "1.0.2"
 
 [[projects]]
   name = "github.com/smartystreets/assertions"
@@ -46,6 +46,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9dec85e533478deccdc2bc207fffd2a9dac9689a193df07db76e939427f526d4"
+  inputs-digest = "6b088dd22b4e6d4d0e6ec62d7e879a812621a3f795ab7bda7d486c7a4a221981"
   solver-name = "gps-cdcl"
   solver-version = 1

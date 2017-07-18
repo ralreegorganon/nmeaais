@@ -1,7 +1,6 @@
 package nmeaais
 
 import (
-	"math"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -22,7 +21,7 @@ func TestType1MessageProcessing(t *testing.T) {
 			RepeatIndicator:   0,
 			MMSI:              371798000,
 			NavigationStatus:  "Under way using engine",
-			RateOfTurn:        math.Inf(-1),
+			RateOfTurn:        -127,
 			SpeedOverGround:   12.3,
 			PositionAccuracy:  true,
 			Longitude:         -123.39538333333333,
