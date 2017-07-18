@@ -16,6 +16,10 @@ func latlon(l int) float64 {
 	return float64(l) / 600000
 }
 
+func latlonMeteorologicalAndHydrological(l int) float64 {
+	return float64(l) / 60000
+}
+
 func latlonShort(l int) float64 {
 	return float64(l) / 600
 }
@@ -42,6 +46,30 @@ func courseOverGround(cog uint) float64 {
 	return float64(cog) / 10
 }
 
+func airTemperature(at int) float64 {
+	floatified := float64(at)
+	if at == -1024 {
+		return floatified
+	}
+	return floatified / 10
+}
+
+func dewPoint(dp int) float64 {
+	floatified := float64(dp)
+	if dp == 501 {
+		return floatified
+	}
+	return floatified / 10
+}
+
+func horizontalVisibility(hv uint) float64 {
+	floatified := float64(hv)
+	if hv == 127 {
+		return floatified
+	}
+	return floatified / 10
+}
+
 func maneuverIndicator(mi uint) string {
 	switch mi {
 	case 0:
@@ -50,6 +78,21 @@ func maneuverIndicator(mi uint) string {
 		return "No special maneuver"
 	case 2:
 		return "Special maneuver"
+	default:
+		return "Not available"
+	}
+}
+
+func pressureTendency(pt uint) string {
+	switch pt {
+	case 0:
+		return "Steady"
+	case 1:
+		return "Decreasing"
+	case 2:
+		return "Increasing"
+	case 3:
+		return "Not available"
 	default:
 		return "Not available"
 	}

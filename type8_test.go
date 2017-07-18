@@ -39,4 +39,37 @@ func TestType8MessageProcessing(t *testing.T) {
 			So(type8, ShouldResemble, expected)
 		})
 	})
+
+	Convey("When processing a type 8 message with meteorological and hydrological data (DAC=1, FID=31)", t, func() {
+		raws := []string{
+			"!AIVDM,2,1,8,B,802R5Ph0GhMq3acG<FA@AHn0@206EuOwiIv1wnSwe7wvlOwwsAwwnSGm,0*71",
+			"!AIVDM,2,2,8,B,wvwt,0*1F",
+		}
+
+		packets := buildPackets(raws)
+		message, _ := Process(packets)
+		met, err := message.GetAsMeteorologicalAndHydrologicalData()
+
+		expected := &MeteorologicalAndHydrologicalData{
+			MessageType:        8,
+			RepeatIndicator:    0,
+			MMSI:               2655619,
+			DesignatedAreaCode: 1,
+			FunctionalID:       31,
+		}
+
+		Convey("The get should return meteorological and hydrological data", func() {
+			Convey("Where the message is not nil", func() {
+				So(met, ShouldNotBeNil)
+			})
+		})
+
+		Convey("The get should not return an error", func() {
+			So(err, ShouldBeNil)
+		})
+
+		Convey("The fields should be populated correctly", func() {
+			So(met, ShouldResemble, expected)
+		})
+	})
 }
