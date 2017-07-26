@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/ralreegorganon/nmeaais"
@@ -77,6 +78,9 @@ func main() {
 			close(decoder.Input)
 			break
 		}
-		decoder.Input <- line
+		decoder.Input <- nmeaais.DecoderInput{
+			Input:     line,
+			Timestamp: time.Now(),
+		}
 	}
 }

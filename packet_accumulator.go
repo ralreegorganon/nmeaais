@@ -1,11 +1,15 @@
 package nmeaais
 
-import "sort"
+import (
+	"sort"
+	"time"
+)
 
 type PacketAccumulatorResult struct {
-	Packets []*Packet
-	Message *Message
-	Error   error
+	Packets   []*Packet
+	Message   *Message
+	Error     error
+	Timestamp time.Time
 }
 
 type PacketAccumulator struct {
@@ -60,8 +64,9 @@ func (pa *PacketAccumulator) process() {
 func (pa *PacketAccumulator) processAccumulatedPackets(p []*Packet) {
 	m, err := Process(p)
 	pa.Results <- &PacketAccumulatorResult{
-		Packets: p,
-		Message: m,
-		Error:   err,
+		Packets:   p,
+		Message:   m,
+		Error:     err,
+		Timestamp: p[0].Timestamp,
 	}
 }

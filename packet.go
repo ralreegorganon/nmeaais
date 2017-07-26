@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type Packet struct {
@@ -19,6 +20,7 @@ type Packet struct {
 	Payload             string
 	FillBits            int64
 	Checksum            string
+	Timestamp           time.Time
 }
 
 const aivdmTag string = "AIVDM"
@@ -26,6 +28,10 @@ const startDelimiter string = "!"
 const validTagAndDelimiter string = startDelimiter + aivdmTag
 
 func Parse(raw string) (*Packet, error) {
+	return ParseAtTime(raw, time.Now())
+}
+
+func ParseAtTime(raw string, timestamp time.Time) (*Packet, error) {
 	raw = strings.TrimSpace(raw)
 
 	if !strings.HasPrefix(raw, startDelimiter) {
@@ -44,6 +50,7 @@ func Parse(raw string) (*Packet, error) {
 	packet := &Packet{
 		Raw:            raw,
 		StartDelimiter: startDelimiter,
+		Timestamp:      timestamp,
 	}
 
 	err := packet.parseTag(parts[0])

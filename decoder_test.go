@@ -2,13 +2,17 @@ package nmeaais
 
 import (
 	"testing"
+	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 func accumulateInput(raws []string, d *Decoder) {
 	for _, raw := range raws {
-		d.Input <- raw
+		d.Input <- DecoderInput{
+			Input:     raw,
+			Timestamp: time.Now(),
+		}
 	}
 	close(d.Input)
 }
