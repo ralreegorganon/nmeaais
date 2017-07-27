@@ -133,6 +133,20 @@ func TestDecoder(t *testing.T) {
 		})
 	})
 
+	Convey("When decoding a type 10 message", t, func() {
+		raws := []string{
+			"!AIVDM,1,1,,A,:5MwvSQGRlc8,0*45",
+		}
+
+		d := NewDecoder()
+		accumulateInput(raws, d)
+		result := <-d.Output
+
+		Convey("The decoder should return a type 10 message", func() {
+			So(result.DecodedMessage, ShouldHaveSameTypeAs, &UTCDateInquiry{})
+		})
+	})
+
 	Convey("When decoding a type 15 message", t, func() {
 		raws := []string{
 			"!AIVDM,1,1,,B,?h3Ovj@p>iBPD00,2*21",
