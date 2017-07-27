@@ -42,6 +42,11 @@ func (m *Message) GetAsDataLinkManagementMessage() (p *DataLinkManagementMessage
 		return nil, fmt.Errorf("nmeaais: tried to get message as type %v, but is type %v", validMessageType, m.MessageType)
 	}
 
+	var expectedMinimumLength int64 = 72
+	if m.bitLength < expectedMinimumLength {
+		return nil, fmt.Errorf("nmeaais: type %v message payload has insufficient length of %v, expected %v", m.MessageType, m.bitLength, expectedMinimumLength)
+	}
+
 	p = &DataLinkManagementMessage{
 		MessageType:     m.MessageType,
 		RepeatIndicator: m.RepeatIndicator,
@@ -50,18 +55,28 @@ func (m *Message) GetAsDataLinkManagementMessage() (p *DataLinkManagementMessage
 		ReservedSlots1:  int64(asUInt(m.unarmoredPayload, 52, 4)),
 		Timeout1:        int64(asUInt(m.unarmoredPayload, 56, 3)),
 		Increment1:      int64(asUInt(m.unarmoredPayload, 59, 11)),
-		Offset2:         int64(asUInt(m.unarmoredPayload, 70, 12)),
-		ReservedSlots2:  int64(asUInt(m.unarmoredPayload, 82, 4)),
-		Timeout2:        int64(asUInt(m.unarmoredPayload, 86, 3)),
-		Increment2:      int64(asUInt(m.unarmoredPayload, 89, 11)),
-		Offset3:         int64(asUInt(m.unarmoredPayload, 100, 12)),
-		ReservedSlots3:  int64(asUInt(m.unarmoredPayload, 112, 4)),
-		Timeout3:        int64(asUInt(m.unarmoredPayload, 116, 3)),
-		Increment3:      int64(asUInt(m.unarmoredPayload, 119, 11)),
-		Offset4:         int64(asUInt(m.unarmoredPayload, 130, 12)),
-		ReservedSlots4:  int64(asUInt(m.unarmoredPayload, 142, 4)),
-		Timeout4:        int64(asUInt(m.unarmoredPayload, 146, 3)),
-		Increment4:      int64(asUInt(m.unarmoredPayload, 149, 11)),
 	}
+
+	if m.bitLength >= 100 {
+		p.Offset2 = int64(asUInt(m.unarmoredPayload, 70, 12))
+		p.ReservedSlots2 = int64(asUInt(m.unarmoredPayload, 82, 4))
+		p.Timeout2 = int64(asUInt(m.unarmoredPayload, 86, 3))
+		p.Increment2 = int64(asUInt(m.unarmoredPayload, 89, 11))
+	}
+
+	if m.bitLength >= 130 {
+		p.Offset3 = int64(asUInt(m.unarmoredPayload, 100, 12))
+		p.ReservedSlots3 = int64(asUInt(m.unarmoredPayload, 112, 4))
+		p.Timeout3 = int64(asUInt(m.unarmoredPayload, 116, 3))
+		p.Increment3 = int64(asUInt(m.unarmoredPayload, 119, 11))
+	}
+
+	if m.bitLength >= 160 {
+		p.Offset4 = int64(asUInt(m.unarmoredPayload, 130, 12))
+		p.ReservedSlots4 = int64(asUInt(m.unarmoredPayload, 142, 4))
+		p.Timeout4 = int64(asUInt(m.unarmoredPayload, 146, 3))
+		p.Increment4 = int64(asUInt(m.unarmoredPayload, 149, 11))
+	}
+
 	return
 }
