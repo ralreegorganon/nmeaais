@@ -97,6 +97,16 @@ func (d *Decoder) decode() {
 				Timestamp:      r.Timestamp,
 			}
 			break
+		case 6:
+			x, err := r.Message.GetAsBinaryAddressedMessage()
+			d.Output <- DecoderOutput{
+				SourcePackets:  r.Packets,
+				SourceMessage:  r.Message,
+				DecodedMessage: x,
+				Error:          err,
+				Timestamp:      r.Timestamp,
+			}
+			break
 		case 7:
 			x, err := r.Message.GetAsBinaryAcknowledge()
 			d.Output <- DecoderOutput{

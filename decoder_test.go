@@ -91,6 +91,20 @@ func TestDecoder(t *testing.T) {
 		})
 	})
 
+	Convey("When decoding a type 6 message", t, func() {
+		raws := []string{
+			"!AIVDM,1,1,,A,65D7EH5DoW300400A@E=B04<d0,4*46",
+		}
+
+		d := NewDecoder()
+		accumulateInput(raws, d)
+		result := <-d.Output
+
+		Convey("The decoder should return a type 6 message", func() {
+			So(result.DecodedMessage, ShouldHaveSameTypeAs, &BinaryAddressedMessage{})
+		})
+	})
+
 	Convey("When decoding a type 7 message", t, func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,75MwQW2G`lEH,0*6C",
