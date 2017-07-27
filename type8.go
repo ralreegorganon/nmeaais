@@ -29,6 +29,11 @@ func (m *Message) GetAsBinaryBroadcastMessage() (p *BinaryBroadcastMessage, err 
 		return nil, fmt.Errorf("nmeaais: tried to get message as type %v, but is type %v", validMessageType, m.MessageType)
 	}
 
+	var expectedMinimumLength int64 = 56
+	if m.bitLength < expectedMinimumLength {
+		return nil, fmt.Errorf("nmeaais: type %v message payload has insufficient length of %v, expected %v", m.MessageType, m.bitLength, expectedMinimumLength)
+	}
+
 	p = &BinaryBroadcastMessage{
 		MessageType:        m.MessageType,
 		RepeatIndicator:    m.RepeatIndicator,
