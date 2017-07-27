@@ -43,6 +43,11 @@ func (m *Message) GetAsStaticAndVoyageRelatedData() (p *StaticAndVoyageRelatedDa
 		return nil, fmt.Errorf("nmeaais: tried to get message as type %v, but is type %v", validMessageType, m.MessageType)
 	}
 
+	var expectedMinimumLength int64 = 420
+	if m.bitLength < expectedMinimumLength {
+		return nil, fmt.Errorf("nmeaais: type %v message payload has insufficient length of %v, expected at least %v", m.MessageType, m.bitLength, expectedMinimumLength)
+	}
+
 	p = &StaticAndVoyageRelatedData{
 		MessageType:          m.MessageType,
 		RepeatIndicator:      m.RepeatIndicator,

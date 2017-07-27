@@ -54,4 +54,22 @@ func TestType5MessageProcessing(t *testing.T) {
 			So(type5, ShouldResemble, expected)
 		})
 	})
+
+	Convey("When processing a type 5 message with a short payload", t, func() {
+		raws := []string{
+			"!AIVDM,1,1,,A,50000010000000000000000000000000,0*22",
+		}
+
+		packets := buildPackets(raws)
+		message, err := Process(packets)
+		type5, err := message.GetAsStaticAndVoyageRelatedData()
+
+		Convey("The get should return an error", func() {
+			So(err, ShouldNotBeNil)
+		})
+
+		Convey("The get should return nil for the message", func() {
+			So(type5, ShouldBeNil)
+		})
+	})
 }
