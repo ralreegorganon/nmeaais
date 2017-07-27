@@ -1,7 +1,6 @@
 package nmeaais
 
 import (
-	"sort"
 	"time"
 )
 
@@ -28,33 +27,45 @@ func NewPacketAccumulator() *PacketAccumulator {
 	return pa
 }
 
-type packets []*Packet
-
-func (slice packets) Len() int {
-	return len(slice)
-}
-
-func (slice packets) Less(i, j int) bool {
-	return slice[i].FragmentNumber < slice[j].FragmentNumber
-}
-
-func (slice packets) Swap(i, j int) {
-	slice[i], slice[j] = slice[j], slice[i]
-}
-
 func (pa *PacketAccumulator) process() {
-	packetBuffer := make(map[int64][]*Packet)
+	packetBuffer := make(map[int64]map[int64][]*Packet)
 	for p := range pa.Packets {
 		if p.FragmentCount == 1 {
 			packets := []*Packet{p}
 			pa.processAccumulatedPackets(packets)
 		} else {
-			packetBuffer[p.SequentialMessageID] = append(packetBuffer[p.SequentialMessageID], p)
-			bufferedFragmentCount := int64(len(packetBuffer[p.SequentialMessageID]))
-			if p.FragmentCount == bufferedFragmentCount {
-				sort.Sort(packets(packetBuffer[p.SequentialMessageID]))
-				pa.processAccumulatedPackets(packetBuffer[p.SequentialMessageID])
-				delete(packetBuffer, p.SequentialMessageID)
+			fragsForSeq, ok := packetBuffer[p.SequentialMessageID]
+
+			if !ok {
+				fragsForSeq = make(map[int64][]*Packet)
+				packetBuffer[p.SequentialMessageID] = fragsForSeq
+			}
+
+			instancesForFrag, ok := fragsForSeq[p.FragmentNumber]
+
+			if !ok {
+				instancesForFrag = make([]*Packet, 0)
+				fragsForSeq[p.FragmentNumber] = instancesForFrag
+			}
+
+			fragsForSeq[p.FragmentNumber] = append(packetBuffer[p.SequentialMessageID][p.FragmentNumber], p)
+
+			composed := make([]*Packet, 0)
+			for i := int64(1); i <= p.FragmentCount; i++ {
+				if ap, ok := packetBuffer[p.SequentialMessageID][int64(i)]; ok {
+					l := len(ap)
+					if l > 0 {
+						composed = append(composed, ap[0])
+					}
+				}
+			}
+
+			composedFragmentCount := int64(len(composed))
+			if p.FragmentCount == composedFragmentCount {
+				pa.processAccumulatedPackets(composed)
+				for i := int64(1); i <= p.FragmentCount; i++ {
+					packetBuffer[p.SequentialMessageID][i] = packetBuffer[p.SequentialMessageID][i][1:]
+				}
 			}
 		}
 	}
