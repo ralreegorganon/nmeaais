@@ -157,6 +157,16 @@ func (d *Decoder) decode() {
 				Timestamp:      r.Timestamp,
 			}
 			break
+		case 13:
+			x, err := r.Message.GetAsSafetyRelatedAcknowledge()
+			d.Output <- DecoderOutput{
+				SourcePackets:  r.Packets,
+				SourceMessage:  r.Message,
+				DecodedMessage: x,
+				Error:          err,
+				Timestamp:      r.Timestamp,
+			}
+			break
 		case 15:
 			x, err := r.Message.GetAsInterrogation()
 			d.Output <- DecoderOutput{

@@ -176,6 +176,20 @@ func TestDecoder(t *testing.T) {
 		})
 	})
 
+	Convey("When decoding a type 13 message", t, func() {
+		raws := []string{
+			"!AIVDM,1,1,,A,=4WCf22Gaw0`,0*5C",
+		}
+
+		d := NewDecoder()
+		accumulateInput(raws, d)
+		result := <-d.Output
+
+		Convey("The decoder should return a type 13 message", func() {
+			So(result.DecodedMessage, ShouldHaveSameTypeAs, &SafetyRelatedAcknowledge{})
+		})
+	})
+
 	Convey("When decoding a type 15 message", t, func() {
 		raws := []string{
 			"!AIVDM,1,1,,B,?h3Ovj@p>iBPD00,2*21",
