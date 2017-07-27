@@ -30,6 +30,10 @@ func Process(packets []*Packet) (*Message, error) {
 		return nil, fmt.Errorf("nmeaais: message has a zero-length payload")
 	}
 
+	if message.bitLength < 38 {
+		return nil, fmt.Errorf("nmeaais: message payload has insufficient length of %v", message.bitLength)
+	}
+
 	message.MessageType = int64(asUInt(message.unarmoredPayload, 0, 6))
 	message.RepeatIndicator = int64(asUInt(message.unarmoredPayload, 6, 2))
 	message.MMSI = int64(asUInt(message.unarmoredPayload, 8, 30))
