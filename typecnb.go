@@ -45,6 +45,11 @@ func (m *Message) GetAsPositionReportClassA() (p *PositionReportClassA, err erro
 		return nil, fmt.Errorf("nmeaais: tried to get message as type 1, 2, or 3, but is type %v", m.MessageType)
 	}
 
+	var expectedMinimumLength int64 = 168
+	if m.bitLength < expectedMinimumLength {
+		return nil, fmt.Errorf("nmeaais: type %v message payload has insufficient length of %v, expected %v", m.MessageType, m.bitLength, expectedMinimumLength)
+	}
+
 	p = &PositionReportClassA{
 		MessageType:       m.MessageType,
 		RepeatIndicator:   m.RepeatIndicator,
