@@ -137,6 +137,16 @@ func (d *Decoder) decode() {
 				Timestamp:      r.Timestamp,
 			}
 			break
+		case 11:
+			x, err := r.Message.GetAsUTCDateResponse()
+			d.Output <- DecoderOutput{
+				SourcePackets:  r.Packets,
+				SourceMessage:  r.Message,
+				DecodedMessage: x,
+				Error:          err,
+				Timestamp:      r.Timestamp,
+			}
+			break
 		case 15:
 			x, err := r.Message.GetAsInterrogation()
 			d.Output <- DecoderOutput{
