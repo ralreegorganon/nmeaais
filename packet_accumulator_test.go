@@ -3,6 +3,7 @@ package nmeaais
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -18,7 +19,20 @@ func accumulatePackets(raws []string, pa *PacketAccumulator) {
 	close(pa.Packets)
 }
 
-func TestPackageAccumulator(t *testing.T) {
+func accumulatePacketsWithDelay(raws []string, delay time.Duration, pa *PacketAccumulator) {
+	t := time.Now()
+	for _, raw := range raws {
+		packet, err := ParseAtTime(raw, t)
+		if err != nil {
+			fmt.Println(err)
+		}
+		pa.Packets <- packet
+		t = t.Add(delay)
+	}
+	close(pa.Packets)
+}
+
+func TestPacketAccumulator(t *testing.T) {
 	Convey("When processing a multi-part message", t, func() {
 		Convey("That does not contain a matching number of packets", func() {
 			raws := []string{
@@ -63,6 +77,21 @@ func TestPackageAccumulator(t *testing.T) {
 
 			pa := NewPacketAccumulator()
 			go accumulatePackets(raws, pa)
+			result := <-pa.Results
+
+			Convey("The accumulator shouldn't return a result", func() {
+				So(result, ShouldBeNil)
+			})
+		})
+
+		Convey("That has packets too far apart in time", func() {
+			raws := []string{
+				"!AIVDM,2,1,3,B,55P5TL01VIaAL@7WKO@mBplU@<PDhh000000001S;AJ::4A80?4i@E53,0*3E",
+				"!AIVDM,2,2,3,B,1@0000000000000,2*55",
+			}
+
+			pa := NewPacketAccumulator()
+			go accumulatePacketsWithDelay(raws, time.Duration(3)*time.Second, pa)
 			result := <-pa.Results
 
 			Convey("The accumulator shouldn't return a result", func() {
@@ -122,7 +151,6 @@ func TestPackageAccumulator(t *testing.T) {
 			})
 		})
 	})
-
 	Convey("When processing a single-part message", t, func() {
 		Convey("That is a valid NMEA 0183 format", func() {
 			raws := []string{

@@ -41,14 +41,29 @@ func (pa *PacketAccumulator) process() {
 				packetBuffer[p.SequentialMessageID] = fragsForSeq
 			}
 
-			instancesForFrag, ok := fragsForSeq[p.FragmentNumber]
+			instancesForFrag, ok := packetBuffer[p.SequentialMessageID][p.FragmentNumber]
 
 			if !ok {
 				instancesForFrag = make([]*Packet, 0)
-				fragsForSeq[p.FragmentNumber] = instancesForFrag
+				packetBuffer[p.SequentialMessageID][p.FragmentNumber] = instancesForFrag
 			}
 
-			fragsForSeq[p.FragmentNumber] = append(packetBuffer[p.SequentialMessageID][p.FragmentNumber], p)
+			maxFragInterval := time.Duration(0)
+			for _, v := range packetBuffer[p.SequentialMessageID] {
+				for _, x := range v {
+					since := p.Timestamp.Sub(x.Timestamp)
+					if since > maxFragInterval {
+						maxFragInterval = since
+					}
+				}
+			}
+
+			if maxFragInterval > time.Duration(2)*time.Second {
+				packetBuffer[p.SequentialMessageID] = make(map[int64][]*Packet)
+				packetBuffer[p.SequentialMessageID][p.FragmentNumber] = make([]*Packet, 0)
+			}
+
+			packetBuffer[p.SequentialMessageID][p.FragmentNumber] = append(packetBuffer[p.SequentialMessageID][p.FragmentNumber], p)
 
 			composed := make([]*Packet, 0)
 			for i := int64(1); i <= p.FragmentCount; i++ {
