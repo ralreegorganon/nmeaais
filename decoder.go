@@ -240,6 +240,16 @@ func (d *Decoder) decode() {
 				}
 			}
 			break
+		case 27:
+			x, err := r.Message.GetAsLongRangeAISBroadcast()
+			d.Output <- DecoderOutput{
+				SourcePackets:  r.Packets,
+				SourceMessage:  r.Message,
+				DecodedMessage: x,
+				Error:          err,
+				Timestamp:      r.Timestamp,
+			}
+			break
 		default:
 			err := fmt.Errorf("nmeaais: unsupported message of type %v from %v", r.Message.MessageType, r.Message.MMSI)
 			d.Output <- DecoderOutput{

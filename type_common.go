@@ -34,12 +34,20 @@ func speedOverGround(sog uint) float64 {
 	return float64(sog) / 10
 }
 
+func speedOverGroundLongRange(sog uint) float64 {
+	return float64(sog)
+}
+
 func speedOverGroundAircraft(sog uint) float64 {
 	return float64(sog)
 }
 
 func courseOverGround(cog uint) float64 {
 	return float64(cog) / 10
+}
+
+func courseOverGroundLongRange(cog uint) float64 {
+	return float64(cog)
 }
 
 func maneuverIndicator(mi uint) string {

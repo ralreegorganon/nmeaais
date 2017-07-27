@@ -287,4 +287,18 @@ func TestDecoder(t *testing.T) {
 			So(result.DecodedMessage, ShouldHaveSameTypeAs, &StaticDataReportB{})
 		})
 	})
+
+	Convey("When decoding a type 27 message", t, func() {
+		raws := []string{
+			"!AIVDM,1,1,,A,Km31e<1KQ?SO4P5d,0*66",
+		}
+
+		d := NewDecoder()
+		accumulateInput(raws, d)
+		result := <-d.Output
+
+		Convey("The decoder should return a type 27 message", func() {
+			So(result.DecodedMessage, ShouldHaveSameTypeAs, &LongRangeAISBroadcast{})
+		})
+	})
 }
