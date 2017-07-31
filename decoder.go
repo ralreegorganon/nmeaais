@@ -227,6 +227,16 @@ func (d *Decoder) decode() {
 				Timestamp:      r.Timestamp,
 			}
 			break
+		case 19:
+			x, err := r.Message.GetAsPositionReportClassBExtended()
+			d.Output <- DecoderOutput{
+				SourcePackets:  r.Packets,
+				SourceMessage:  r.Message,
+				DecodedMessage: x,
+				Error:          err,
+				Timestamp:      r.Timestamp,
+			}
+			break
 		case 20:
 			x, err := r.Message.GetAsDataLinkManagementMessage()
 			d.Output <- DecoderOutput{

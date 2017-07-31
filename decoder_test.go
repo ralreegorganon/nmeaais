@@ -32,10 +32,9 @@ func TestDecoder(t *testing.T) {
 		})
 	})
 
-	/* Need a type 2 example
 	Convey("When decoding a type 2 message", t, func() {
 		raws := []string{
-			"!AIVDM,1,1,,A,15RTgt0PAso;90TKcjM8h6g208CQ,0*4A",
+			"!AIVDM,1,1,,B,25Cjtd0Oj;Jp7ilG7=UkKBoB0<06,0*60",
 		}
 
 		d := NewDecoder()
@@ -46,7 +45,6 @@ func TestDecoder(t *testing.T) {
 			So(result.DecodedMessage, ShouldHaveSameTypeAs, &PositionReportClassA{})
 		})
 	})
-	*/
 
 	Convey("When decoding a type 3 message", t, func() {
 		raws := []string{
@@ -272,6 +270,20 @@ func TestDecoder(t *testing.T) {
 
 		Convey("The decoder should return a type 18 message", func() {
 			So(result.DecodedMessage, ShouldHaveSameTypeAs, &PositionReportClassBStandard{})
+		})
+	})
+
+	Convey("When decoding a type 19 message", t, func() {
+		raws := []string{
+			"!AIVDM,1,1,,B,C5N3SRgPEnJGEBT>NhWAwwo862PaLELTBJ:V00000000S0D:R220,0*0B",
+		}
+
+		d := NewDecoder()
+		accumulateInput(raws, d)
+		result := <-d.Output
+
+		Convey("The decoder should return a type 19 message", func() {
+			So(result.DecodedMessage, ShouldHaveSameTypeAs, &PositionReportClassBExtended{})
 		})
 	})
 
