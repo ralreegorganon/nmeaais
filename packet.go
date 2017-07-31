@@ -34,8 +34,8 @@ func Parse(raw string) (*Packet, error) {
 func ParseAtTime(raw string, timestamp time.Time) (*Packet, error) {
 	raw = strings.TrimSpace(raw)
 
-	if !strings.HasPrefix(raw, startDelimiter) {
-		return nil, errors.New("nmeaais: invalid start delimiter")
+	if !strings.HasPrefix(raw, validTagAndDelimiter) {
+		return nil, errors.New("nmeaais: invalid start delimiter and tag")
 	}
 
 	parts := strings.Split(raw, ",")

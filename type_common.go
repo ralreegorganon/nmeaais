@@ -5,11 +5,7 @@ import (
 )
 
 func asBool(b uint) bool {
-	if b == 1 {
-		return true
-	}
-
-	return false
+	return b == 1
 }
 
 func latlon(l int) float64 {
@@ -100,7 +96,7 @@ var aidTypes = []string{
 }
 
 func aidType(at uint) string {
-	if at < 0 || at > aidTypesMax {
+	if at > aidTypesMax {
 		return "Undefined"
 	}
 	return aidTypes[at]
@@ -211,7 +207,7 @@ var shipTypes = []string{
 }
 
 func shipType(st uint) string {
-	if st < 0 || st > shipTypesMax {
+	if st > shipTypesMax {
 		return "Undefined"
 	}
 	return shipTypes[st]
@@ -238,7 +234,7 @@ var epfdTypes = []string{
 }
 
 func epfdType(et uint) string {
-	if et < 0 || et > epfdTypesMax {
+	if et > epfdTypesMax {
 		return "Undefined"
 	}
 	return epfdTypes[et]
@@ -265,7 +261,7 @@ var navigationStatuses = []string{
 }
 
 func navigationStatus(ns uint) string {
-	if ns < 0 || ns > navigationStatusesMax {
+	if ns > navigationStatusesMax {
 		return "Not defined"
 	}
 	return navigationStatuses[ns]
@@ -292,7 +288,7 @@ var stationTypes = []string{
 }
 
 func stationType(st uint) string {
-	if st < 0 || st > stationTypesMax {
+	if st > stationTypesMax {
 		return "Undefined"
 	}
 	return stationTypes[st]
@@ -319,7 +315,7 @@ var stationIntervals = []string{
 }
 
 func stationInterval(si uint) string {
-	if si < 0 || si > stationIntervalsMax {
+	if si > stationIntervalsMax {
 		return "Undefined"
 	}
 	return stationIntervals[si]

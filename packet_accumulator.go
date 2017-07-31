@@ -34,17 +34,14 @@ func (pa *PacketAccumulator) process() {
 			packets := []*Packet{p}
 			pa.processAccumulatedPackets(packets)
 		} else {
-			fragsForSeq, ok := packetBuffer[p.SequentialMessageID]
 
-			if !ok {
-				fragsForSeq = make(map[int64][]*Packet)
+			if _, ok := packetBuffer[p.SequentialMessageID]; !ok {
+				fragsForSeq := make(map[int64][]*Packet)
 				packetBuffer[p.SequentialMessageID] = fragsForSeq
 			}
 
-			instancesForFrag, ok := packetBuffer[p.SequentialMessageID][p.FragmentNumber]
-
-			if !ok {
-				instancesForFrag = make([]*Packet, 0)
+			if _, ok := packetBuffer[p.SequentialMessageID][p.FragmentNumber]; !ok {
+				instancesForFrag := make([]*Packet, 0)
 				packetBuffer[p.SequentialMessageID][p.FragmentNumber] = instancesForFrag
 			}
 
@@ -67,7 +64,7 @@ func (pa *PacketAccumulator) process() {
 
 			composed := make([]*Packet, 0)
 			for i := int64(1); i <= p.FragmentCount; i++ {
-				if ap, ok := packetBuffer[p.SequentialMessageID][int64(i)]; ok {
+				if ap, ok := packetBuffer[p.SequentialMessageID][i]; ok {
 					l := len(ap)
 					if l > 0 {
 						composed = append(composed, ap[0])

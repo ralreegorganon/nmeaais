@@ -76,7 +76,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 4:
 			x, err := r.Message.GetAsBaseStationReport()
 			d.Output <- DecoderOutput{
@@ -86,7 +85,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 5:
 			x, err := r.Message.GetAsStaticAndVoyageRelatedData()
 			d.Output <- DecoderOutput{
@@ -96,7 +94,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 6:
 			x, err := r.Message.GetAsBinaryAddressedMessage()
 			d.Output <- DecoderOutput{
@@ -106,7 +103,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 7:
 			x, err := r.Message.GetAsBinaryAcknowledge()
 			d.Output <- DecoderOutput{
@@ -116,7 +112,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 8:
 			x, err := r.Message.GetAsBinaryBroadcastMessage()
 			d.Output <- DecoderOutput{
@@ -126,7 +121,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 9:
 			x, err := r.Message.GetAsStandardSARAircraftPositionReport()
 			d.Output <- DecoderOutput{
@@ -136,7 +130,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 10:
 			x, err := r.Message.GetAsUTCDateInquiry()
 			d.Output <- DecoderOutput{
@@ -146,7 +139,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 11:
 			x, err := r.Message.GetAsUTCDateResponse()
 			d.Output <- DecoderOutput{
@@ -156,7 +148,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 12:
 			x, err := r.Message.GetAsAddressedSafetyRelated()
 			d.Output <- DecoderOutput{
@@ -166,7 +157,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 13:
 			x, err := r.Message.GetAsSafetyRelatedAcknowledge()
 			d.Output <- DecoderOutput{
@@ -176,7 +166,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 14:
 			x, err := r.Message.GetAsSafetyRelatedBroadcast()
 			d.Output <- DecoderOutput{
@@ -186,7 +175,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 15:
 			x, err := r.Message.GetAsInterrogation()
 			d.Output <- DecoderOutput{
@@ -196,7 +184,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 16:
 			x, err := r.Message.GetAsAssignmentModeCommand()
 			d.Output <- DecoderOutput{
@@ -206,7 +193,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 17:
 			x, err := r.Message.GetAsDGNSSBroadcastBinaryMessage()
 			d.Output <- DecoderOutput{
@@ -216,7 +202,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 18:
 			x, err := r.Message.GetAsPositionReportClassBStandard()
 			d.Output <- DecoderOutput{
@@ -226,7 +211,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 19:
 			x, err := r.Message.GetAsPositionReportClassBExtended()
 			d.Output <- DecoderOutput{
@@ -236,7 +220,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 20:
 			x, err := r.Message.GetAsDataLinkManagementMessage()
 			d.Output <- DecoderOutput{
@@ -246,7 +229,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 21:
 			x, err := r.Message.GetAsAidToNavigationReport()
 			d.Output <- DecoderOutput{
@@ -256,7 +238,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 22:
 			x, err := r.Message.GetAsChannelManagement()
 			d.Output <- DecoderOutput{
@@ -266,7 +247,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 23:
 			x, err := r.Message.GetAsGroupAssignmentCommand()
 			d.Output <- DecoderOutput{
@@ -276,7 +256,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 24:
 			if ok, _ := r.Message.IsStaticDataReportA(); ok {
 				x, err := r.Message.GetAsStaticDataReportA()
@@ -298,7 +277,6 @@ func (d *Decoder) decode() {
 					Timestamp:      r.Timestamp,
 				}
 			}
-			break
 		case 25:
 			x, err := r.Message.GetAsSingleSlotBinaryMessage()
 			d.Output <- DecoderOutput{
@@ -308,7 +286,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		case 27:
 			x, err := r.Message.GetAsLongRangeAISBroadcast()
 			d.Output <- DecoderOutput{
@@ -318,7 +295,6 @@ func (d *Decoder) decode() {
 				Error:          err,
 				Timestamp:      r.Timestamp,
 			}
-			break
 		default:
 			err := fmt.Errorf("nmeaais: unsupported message of type %v from %v", r.Message.MessageType, r.Message.MMSI)
 			d.Output <- DecoderOutput{
