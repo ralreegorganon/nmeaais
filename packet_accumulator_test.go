@@ -131,6 +131,38 @@ func TestPacketAccumulator(t *testing.T) {
 			})
 		})
 
+		Convey("That has interwoven packets on channels A and B", func() {
+			raws := []string{
+				"!AIVDM,2,1,6,B,542M92h00001@<7;?G0PD4i@R0<tqA8tj37>220o0h:2240Ht50000000000,0*3B",
+				"!AIVDM,2,1,2,A,542M92h00001@<7;?G0PD4i@R0<tqA8tj37>220o0h:2240Ht500000000000000,0*3C",
+				"!AIVDM,2,2,2,A,0000002,2*24",
+				"!AIVDM,2,2,6,B,00000000000,2*21",
+			}
+
+			pa := NewPacketAccumulator()
+			go accumulatePackets(raws, pa)
+
+			result1 := <-pa.Results
+			Convey("The accumulator should return the first message", func() {
+				Convey("Where the message is not nil", func() {
+					So(result1.Message, ShouldNotBeNil)
+				})
+			})
+			Convey("The accumulator should not return an error for the first message", func() {
+				So(result1.Error, ShouldBeNil)
+			})
+
+			result2 := <-pa.Results
+			Convey("The accumulator should return the second message", func() {
+				Convey("Where the message is not nil", func() {
+					So(result2.Message, ShouldNotBeNil)
+				})
+			})
+			Convey("The accumulator should not return an error for the second message", func() {
+				So(result2.Error, ShouldBeNil)
+			})
+		})
+
 		Convey("That is a valid NMEA 0183 format", func() {
 			raws := []string{
 				"!AIVDM,2,1,3,B,55P5TL01VIaAL@7WKO@mBplU@<PDhh000000001S;AJ::4A80?4i@E53,0*3E",
