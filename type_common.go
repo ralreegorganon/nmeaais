@@ -270,3 +270,57 @@ func navigationStatus(ns uint) string {
 	}
 	return navigationStatuses[ns]
 }
+
+var stationTypesMax = uint(len(stationTypes) - 1)
+var stationTypes = []string{
+	"All types of mobiles",
+	"Reserved for future use",
+	"All types of Class B mobile stations",
+	"SAR airborne mobile station",
+	"Aid to Navigation station",
+	"Class B shipborne mobile station (IEC62287 only)",
+	"Regional use and inland waterways",
+	"Regional use and inland waterways",
+	"Regional use and inland waterways",
+	"Regional use and inland waterways",
+	"Reserved for future use",
+	"Reserved for future use",
+	"Reserved for future use",
+	"Reserved for future use",
+	"Reserved for future use",
+	"Reserved for future use",
+}
+
+func stationType(st uint) string {
+	if st < 0 || st > stationTypesMax {
+		return "Undefined"
+	}
+	return stationTypes[st]
+}
+
+var stationIntervalsMax = uint(len(stationIntervals) - 1)
+var stationIntervals = []string{
+	"As given by the autonomous mode",
+	"10 Minutes",
+	"6 Minutes",
+	"3 Minutes",
+	"1 Minute",
+	"30 Seconds",
+	"15 Seconds",
+	"10 Seconds",
+	"5 Seconds",
+	"Next Shorter Reporting Interval",
+	"Next Longer Reporting Interval",
+	"Reserved for future use",
+	"Reserved for future use",
+	"Reserved for future use",
+	"Reserved for future use",
+	"Reserved for future use",
+}
+
+func stationInterval(si uint) string {
+	if si < 0 || si > stationIntervalsMax {
+		return "Undefined"
+	}
+	return stationIntervals[si]
+}

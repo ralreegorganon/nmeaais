@@ -267,6 +267,16 @@ func (d *Decoder) decode() {
 				Timestamp:      r.Timestamp,
 			}
 			break
+		case 23:
+			x, err := r.Message.GetAsGroupAssignmentCommand()
+			d.Output <- DecoderOutput{
+				SourcePackets:  r.Packets,
+				SourceMessage:  r.Message,
+				DecodedMessage: x,
+				Error:          err,
+				Timestamp:      r.Timestamp,
+			}
+			break
 		case 24:
 			if ok, _ := r.Message.IsStaticDataReportA(); ok {
 				x, err := r.Message.GetAsStaticDataReportA()

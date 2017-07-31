@@ -329,6 +329,20 @@ func TestDecoder(t *testing.T) {
 		})
 	})
 
+	Convey("When decoding a type 23 message", t, func() {
+		raws := []string{
+			"!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12",
+		}
+
+		d := NewDecoder()
+		accumulateInput(raws, d)
+		result := <-d.Output
+
+		Convey("The decoder should return a type 23 message", func() {
+			So(result.DecodedMessage, ShouldHaveSameTypeAs, &GroupAssignmentCommand{})
+		})
+	})
+
 	Convey("When decoding a type 24 A message", t, func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,H7P<1>1LPU@D8U8A<0000000000,2*6C",
