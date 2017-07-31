@@ -371,6 +371,20 @@ func TestDecoder(t *testing.T) {
 		})
 	})
 
+	Convey("When decoding a type 25 message", t, func() {
+		raws := []string{
+			"!AIVDM,1,1,,A,I8IRGB40QPPa0:<HP::V=gwv0l48,0*0E",
+		}
+
+		d := NewDecoder()
+		accumulateInput(raws, d)
+		result := <-d.Output
+
+		Convey("The decoder should return a type 275message", func() {
+			So(result.DecodedMessage, ShouldHaveSameTypeAs, &SingleSlotBinaryMessage{})
+		})
+	})
+
 	Convey("When decoding a type 27 message", t, func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,Km31e<1KQ?SO4P5d,0*66",

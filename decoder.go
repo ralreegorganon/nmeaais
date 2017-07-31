@@ -299,6 +299,16 @@ func (d *Decoder) decode() {
 				}
 			}
 			break
+		case 25:
+			x, err := r.Message.GetAsSingleSlotBinaryMessage()
+			d.Output <- DecoderOutput{
+				SourcePackets:  r.Packets,
+				SourceMessage:  r.Message,
+				DecodedMessage: x,
+				Error:          err,
+				Timestamp:      r.Timestamp,
+			}
+			break
 		case 27:
 			x, err := r.Message.GetAsLongRangeAISBroadcast()
 			d.Output <- DecoderOutput{
