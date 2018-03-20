@@ -13,6 +13,7 @@ func accumulatePackets(raws []string, pa *PacketAccumulator) {
 		packet, err := Parse(raw)
 		if err != nil {
 			fmt.Println(err)
+			continue
 		}
 		pa.Packets <- packet
 	}
@@ -25,6 +26,7 @@ func accumulatePacketsWithDelay(raws []string, delay time.Duration, pa *PacketAc
 		packet, err := ParseAtTime(raw, t)
 		if err != nil {
 			fmt.Println(err)
+			continue
 		}
 		pa.Packets <- packet
 		t = t.Add(delay)
@@ -183,6 +185,7 @@ func TestPacketAccumulator(t *testing.T) {
 			})
 		})
 	})
+	
 	Convey("When processing a single-part message", t, func() {
 		Convey("That is a valid NMEA 0183 format", func() {
 			raws := []string{
@@ -200,6 +203,20 @@ func TestPacketAccumulator(t *testing.T) {
 			})
 			Convey("The accumulator should not return an error", func() {
 				So(result.Error, ShouldBeNil)
+			})
+		})
+
+		Convey("That starts with !BSVDM", func() {
+			raws := []string{
+				"!BSVDM,1,1,,A,13mJDd040=0Fr:TRk7wv0JwT2@Mu,0*45",
+			}
+
+			pa := NewPacketAccumulator()
+			go accumulatePackets(raws, pa)
+			result := <-pa.Results
+
+			Convey("The accumulator shouldn't return a result", func() {
+				So(result, ShouldBeNil)
 			})
 		})
 	})

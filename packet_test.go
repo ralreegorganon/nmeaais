@@ -8,8 +8,19 @@ import (
 
 func TestNmeaPacketParsing(t *testing.T) {
 	Convey("When parsing a raw packet", t, func() {
-		Convey("That that does not start with !", func() {
+		Convey("That does not start with !", func() {
 			raw := "$GPAAM,A,A,0.10,N,WPTNME*32"
+			packet, err := Parse(raw)
+			Convey("The parser should return nil for the packet", func() {
+				So(packet, ShouldBeNil)
+			})
+			Convey("The parser should return an error", func() {
+				So(err, ShouldNotBeNil)
+			})
+		})
+
+		Convey("That starts with !BSVDM", func() {
+			raw := "!BSVDM,1,1,,A,13mJDd040=0Fr:TRk7wv0JwT2@Mu,0*45"
 			packet, err := Parse(raw)
 			Convey("The parser should return nil for the packet", func() {
 				So(packet, ShouldBeNil)

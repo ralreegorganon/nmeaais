@@ -49,7 +49,7 @@ func main() {
 					"err":     o.Error,
 					"packets": spew.Sdump(o.SourcePackets),
 					"message": spew.Sdump(o.SourceMessage),
-				}).Debug("Failed to process packets into message")
+				}).Warning("Failed to process packets into message")
 				continue
 			}
 
