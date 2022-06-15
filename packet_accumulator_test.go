@@ -215,8 +215,13 @@ func TestPacketAccumulator(t *testing.T) {
 			go accumulatePackets(raws, pa)
 			result := <-pa.Results
 
-			Convey("The accumulator shouldn't return a result", func() {
-				So(result, ShouldBeNil)
+			Convey("The accumulator should return a message", func() {
+				Convey("Where the message is not nil", func() {
+					So(result.Message, ShouldNotBeNil)
+				})
+			})
+			Convey("The accumulator should not return an error", func() {
+				So(result.Error, ShouldBeNil)
 			})
 		})
 	})

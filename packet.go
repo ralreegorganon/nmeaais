@@ -24,8 +24,10 @@ type Packet struct {
 }
 
 const aivdmTag string = "AIVDM"
+const bsvdmTag string = "BSVDM"
 const startDelimiter string = "!"
-const validTagAndDelimiter string = startDelimiter + aivdmTag
+const validAvidmTagAndDelimiter string = startDelimiter + aivdmTag
+const validBsvdmTagAndDelimiter string = startDelimiter + bsvdmTag
 
 func Parse(raw string) (*Packet, error) {
 	return ParseAtTime(raw, time.Now())
@@ -33,8 +35,12 @@ func Parse(raw string) (*Packet, error) {
 
 func ParseAtTime(raw string, timestamp time.Time) (*Packet, error) {
 	raw = strings.TrimSpace(raw)
+	_, raw, _ = strings.Cut(raw, startDelimiter)
+	raw = startDelimiter + raw
 
-	if !strings.HasPrefix(raw, validTagAndDelimiter) {
+	hasValidPrefix := strings.HasPrefix(raw, validAvidmTagAndDelimiter) || strings.HasPrefix(raw, validBsvdmTagAndDelimiter)
+
+	if !hasValidPrefix {
 		return nil, errors.New("nmeaais: invalid start delimiter and tag")
 	}
 
