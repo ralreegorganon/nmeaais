@@ -1,13 +1,12 @@
 package nmeaais
 
 import (
-	"testing"
-
-	. "github.com/smartystreets/goconvey/convey"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
-func TestType5MessageProcessing(t *testing.T) {
-	Convey("When processing a type 5 message", t, func() {
+var _ = Describe("Type5MessageProcessing", func() {
+	Describe("When processing a type 5 message", func() {
 		raws := []string{
 			"!AIVDM,2,1,9,B,55OER>01sWpeL@GS?CM0th5:1=@u8n222222220P1PJ354AB0;PCPj3lPAiH,0*1B",
 			"!AIVDM,2,2,9,B,88888888880,2*2E",
@@ -39,23 +38,19 @@ func TestType5MessageProcessing(t *testing.T) {
 			Destination:          "ANCHORAGE",
 			DTE:                  false,
 		}
-
-		Convey("The get should return a type 5 message", func() {
-			Convey("Where the message is not nil", func() {
-				So(type5, ShouldNotBeNil)
+		Context("The get should return a type 5 message", func() {
+			It("Where the message is not nil", func() {
+				Expect(type5).To(Not(BeNil()))
 			})
 		})
-
-		Convey("The get should not return an error", func() {
-			So(err, ShouldBeNil)
+		It("The get should not return an error", func() {
+			Expect(err).To(BeNil())
 		})
-
-		Convey("The fields should be populated correctly", func() {
-			So(type5, ShouldResemble, expected)
+		It("The fields should be populated correctly", func() {
+			Expect(type5).To(Equal(expected))
 		})
 	})
-
-	Convey("When processing a type 5 message with a short payload", t, func() {
+	Describe("When processing a type 5 message with a short payload", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,50000010000000000000000000000000,0*22",
 		}
@@ -63,13 +58,11 @@ func TestType5MessageProcessing(t *testing.T) {
 		packets := buildPackets(raws)
 		message, err := Process(packets)
 		type5, err := message.GetAsStaticAndVoyageRelatedData()
-
-		Convey("The get should return an error", func() {
-			So(err, ShouldNotBeNil)
+		It("The get should return an error", func() {
+			Expect(err).To(Not(BeNil()))
 		})
-
-		Convey("The get should return nil for the message", func() {
-			So(type5, ShouldBeNil)
+		It("The get should return nil for the message", func() {
+			Expect(type5).To(BeNil())
 		})
 	})
-}
+})

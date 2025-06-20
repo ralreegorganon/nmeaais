@@ -1,14 +1,14 @@
 package nmeaais
 
 import (
-	"testing"
 	"time"
 
-	. "github.com/smartystreets/goconvey/convey"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
-func TestType11MessageProcessing(t *testing.T) {
-	Convey("When processing a type 11 message", t, func() {
+var _ = Describe("Type11MessageProcessing", func() {
+	Describe("When processing a type 11 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,;5N;BdQuw;:i5mAi:nS27jQ02000,0*3B",
 		}
@@ -29,19 +29,16 @@ func TestType11MessageProcessing(t *testing.T) {
 			RAIM:             true,
 			RadioStatus:      0,
 		}
-
-		Convey("The get should return a type 11 message", func() {
-			Convey("Where the message is not nil", func() {
-				So(type11, ShouldNotBeNil)
+		Context("The get should return a type 11 message", func() {
+			It("Where the message is not nil", func() {
+				Expect(type11).To(Not(BeNil()))
 			})
 		})
-
-		Convey("The get should not return an error", func() {
-			So(err, ShouldBeNil)
+		It("The get should not return an error", func() {
+			Expect(err).To(BeNil())
 		})
-
-		Convey("The fields should be populated correctly", func() {
-			So(type11, ShouldResemble, expected)
+		It("The fields should be populated correctly", func() {
+			Expect(type11).To(Equal(expected))
 		})
 	})
-}
+})

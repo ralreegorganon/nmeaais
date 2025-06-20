@@ -10,7 +10,16 @@ This is a Go library and toolkit for processing NMEA AIS (Automatic Identificati
 
 **Build and Test:**
 ```bash
-# Run all tests
+# Run all tests with Ginkgo
+ginkgo ./...
+
+# Run tests with verbose output
+ginkgo -v ./...
+
+# Run specific test suite
+ginkgo ./type4_test.go
+
+# Traditional Go test (also works)
 go test ./...
 
 # Run tests with verbose output
@@ -59,12 +68,18 @@ Raw NMEA sentences can span multiple packets for complex messages. The accumulat
 
 ## Testing Framework
 
-Uses GoConvey testing framework. Tests are comprehensive with 29 test files covering all core functionality. The project includes test data files and mock implementations for development.
+Uses Ginkgo testing framework with Gomega assertions. Tests are comprehensive with 29 test files covering all core functionality. The project includes test data files and mock implementations for development.
+
+**Test Structure:**
+- BDD-style tests using `Describe`, `Context`, and `It` blocks
+- Expectations use Gomega matchers like `Expect(actual).To(Equal(expected))`
+- Setup code handled in `BeforeEach` blocks for proper test isolation
 
 ## Dependencies
 
 - `github.com/sirupsen/logrus`: Structured logging throughout the application
-- `github.com/smartystreets/goconvey`: Testing framework with BDD-style assertions
+- `github.com/onsi/ginkgo/v2`: BDD-style testing framework  
+- `github.com/onsi/gomega`: Matcher/assertion library for Ginkgo tests
 - `github.com/davecgh/go-spew`: Debug pretty printing for complex data structures
 
 ## Development Notes

@@ -1,14 +1,13 @@
 package nmeaais
 
 import (
-	"testing"
-
-	. "github.com/smartystreets/goconvey/convey"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
-func TestType21MessageProcessing(t *testing.T) {
-	Convey("When processing a type 21 message", t, func() {
-		Convey("Without a name extension", func() {
+var _ = Describe("Type21MessageProcessing", func() {
+	Describe("When processing a type 21 message", func() {
+		Context("Without a name extension", func() {
 			raws := []string{
 				"!AIVDM,1,1,,A,E>k1kFd1WWUh4W62b@1:WdhHpP0J`lV<AQ@:000003vP10,4*69",
 			}
@@ -38,22 +37,19 @@ func TestType21MessageProcessing(t *testing.T) {
 				AssignedMode:         false,
 				NameExtension:        "",
 			}
-
-			Convey("The get should return a type 21 message", func() {
-				Convey("Where the message is not nil", func() {
-					So(type21, ShouldNotBeNil)
+			Context("The get should return a type 21 message", func() {
+				It("Where the message is not nil", func() {
+					Expect(type21).To(Not(BeNil()))
 				})
 			})
-
-			Convey("The get should not return an error", func() {
-				So(err, ShouldBeNil)
+			It("The get should not return an error", func() {
+				Expect(err).To(BeNil())
 			})
-
-			Convey("The fields should be populated correctly", func() {
-				So(type21, ShouldResemble, expected)
+			It("The fields should be populated correctly", func() {
+				Expect(type21).To(Equal(expected))
 			})
 		})
-		Convey("With a name extension", func() {
+		Context("With a name extension", func() {
 			raws := []string{
 				"!AIVDM,2,1,5,B,E1mg=5J1T4W0h97aRh6ba84<h2d;W:Te=eLvH50```q,0*46",
 				"!AIVDM,2,2,5,B,:D44QDlp0C1DU00,2*36",
@@ -84,20 +80,17 @@ func TestType21MessageProcessing(t *testing.T) {
 				AssignedMode:         false,
 				NameExtension:        "PRESS ALERT",
 			}
-
-			Convey("The get should return a type 21 message", func() {
-				Convey("Where the message is not nil", func() {
-					So(type21, ShouldNotBeNil)
+			Context("The get should return a type 21 message", func() {
+				It("Where the message is not nil", func() {
+					Expect(type21).To(Not(BeNil()))
 				})
 			})
-
-			Convey("The get should not return an error", func() {
-				So(err, ShouldBeNil)
+			It("The get should not return an error", func() {
+				Expect(err).To(BeNil())
 			})
-
-			Convey("The fields should be populated correctly", func() {
-				So(type21, ShouldResemble, expected)
+			It("The fields should be populated correctly", func() {
+				Expect(type21).To(Equal(expected))
 			})
 		})
 	})
-}
+})

@@ -1,13 +1,12 @@
 package nmeaais
 
 import (
-	"testing"
-
-	. "github.com/smartystreets/goconvey/convey"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
-func TestType23MessageProcessing(t *testing.T) {
-	Convey("When processing a type 23 message", t, func() {
+var _ = Describe("Type23MessageProcessing", func() {
+	Describe("When processing a type 23 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12",
 		}
@@ -30,19 +29,16 @@ func TestType23MessageProcessing(t *testing.T) {
 			ReportInterval:  "Next Shorter Reporting Interval",
 			QuietTime:       0,
 		}
-
-		Convey("The get should return a type 23 message", func() {
-			Convey("Where the message is not nil", func() {
-				So(type23, ShouldNotBeNil)
+		Context("The get should return a type 23 message", func() {
+			It("Where the message is not nil", func() {
+				Expect(type23).To(Not(BeNil()))
 			})
 		})
-
-		Convey("The get should not return an error", func() {
-			So(err, ShouldBeNil)
+		It("The get should not return an error", func() {
+			Expect(err).To(BeNil())
 		})
-
-		Convey("The fields should be populated correctly", func() {
-			So(type23, ShouldResemble, expected)
+		It("The fields should be populated correctly", func() {
+			Expect(type23).To(Equal(expected))
 		})
 	})
-}
+})

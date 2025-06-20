@@ -1,14 +1,13 @@
 package nmeaais
 
 import (
-	"testing"
-
-	. "github.com/smartystreets/goconvey/convey"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
-func TestType22MessageProcessing(t *testing.T) {
-	Convey("When processing a type 22 message", t, func() {
-		Convey("Addressed to individual stations", func() {
+var _ = Describe("Type22MessageProcessing", func() {
+	Describe("When processing a type 22 message", func() {
+		Context("Addressed to individual stations", func() {
 			raws := []string{
 				"!AIVDM,1,1,,B,FGsEEEEv15NU47?000G@8JnKKuwGFT<V0<1gg6QvmEEEOP@,2*4D",
 			}
@@ -36,22 +35,19 @@ func TestType22MessageProcessing(t *testing.T) {
 				SWLongitude:     0,
 				SWLatitude:      0,
 			}
-
-			Convey("The get should return a type 22 message", func() {
-				Convey("Where the message is not nil", func() {
-					So(type22, ShouldNotBeNil)
+			Context("The get should return a type 22 message", func() {
+				It("Where the message is not nil", func() {
+					Expect(type22).To(Not(BeNil()))
 				})
 			})
-
-			Convey("The get should not return an error", func() {
-				So(err, ShouldBeNil)
+			It("The get should not return an error", func() {
+				Expect(err).To(BeNil())
 			})
-
-			Convey("The fields should be populated correctly", func() {
-				So(type22, ShouldResemble, expected)
+			It("The fields should be populated correctly", func() {
+				Expect(type22).To(Equal(expected))
 			})
 		})
-		Convey("Broadcast to an area", func() {
+		Context("Broadcast to an area", func() {
 			raws := []string{
 				"!AIVDM,1,1,,B,FGrEEEEv4h3OvjAuuQDnDo=cc8Knew?02<8iQt1vUEEEOTP,2*54",
 			}
@@ -79,20 +75,17 @@ func TestType22MessageProcessing(t *testing.T) {
 				SWLongitude:     36.20166666666667,
 				SWLatitude:      66.39166666666667,
 			}
-
-			Convey("The get should return a type 22 message", func() {
-				Convey("Where the message is not nil", func() {
-					So(type22, ShouldNotBeNil)
+			Context("The get should return a type 22 message", func() {
+				It("Where the message is not nil", func() {
+					Expect(type22).To(Not(BeNil()))
 				})
 			})
-
-			Convey("The get should not return an error", func() {
-				So(err, ShouldBeNil)
+			It("The get should not return an error", func() {
+				Expect(err).To(BeNil())
 			})
-
-			Convey("The fields should be populated correctly", func() {
-				So(type22, ShouldResemble, expected)
+			It("The fields should be populated correctly", func() {
+				Expect(type22).To(Equal(expected))
 			})
 		})
 	})
-}
+})

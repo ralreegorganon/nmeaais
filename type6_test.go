@@ -1,13 +1,12 @@
 package nmeaais
 
 import (
-	"testing"
-
-	. "github.com/smartystreets/goconvey/convey"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
-func TestType6MessageProcessing(t *testing.T) {
-	Convey("When processing a type 6 message", t, func() {
+var _ = Describe("Type6MessageProcessing", func() {
+	Describe("When processing a type 6 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,65D7EH5DoW300400A@E=B04<d0,4*46",
 		}
@@ -27,19 +26,16 @@ func TestType6MessageProcessing(t *testing.T) {
 			FunctionalID:       0,
 			Data:               []uint8{0, 69, 5, 77, 72, 1, 12, 176},
 		}
-
-		Convey("The get should return a type 6 message", func() {
-			Convey("Where the message is not nil", func() {
-				So(type6, ShouldNotBeNil)
+		Context("The get should return a type 6 message", func() {
+			It("Where the message is not nil", func() {
+				Expect(type6).To(Not(BeNil()))
 			})
 		})
-
-		Convey("The get should not return an error", func() {
-			So(err, ShouldBeNil)
+		It("The get should not return an error", func() {
+			Expect(err).To(BeNil())
 		})
-
-		Convey("The fields should be populated correctly", func() {
-			So(type6, ShouldResemble, expected)
+		It("The fields should be populated correctly", func() {
+			Expect(type6).To(Equal(expected))
 		})
 	})
-}
+})

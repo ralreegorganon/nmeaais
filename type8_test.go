@@ -1,13 +1,12 @@
 package nmeaais
 
 import (
-	"testing"
-
-	. "github.com/smartystreets/goconvey/convey"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
-func TestType8MessageProcessing(t *testing.T) {
-	Convey("When processing a type 8 message", t, func() {
+var _ = Describe("Type8MessageProcessing", func() {
+	Describe("When processing a type 8 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,B,85Mwqd1Kf4dldnKQ<>bW6RGmDu<6U5f1>W<LMGV85qe;dkv@rN5h,0*7D",
 		}
@@ -24,19 +23,16 @@ func TestType8MessageProcessing(t *testing.T) {
 			FunctionalID:       56,
 			Data:               []byte{75, 52, 179, 102, 225, 48, 234, 167, 26, 37, 245, 83, 211, 6, 148, 91, 129, 58, 115, 28, 117, 121, 136, 23, 155, 75, 179, 63, 144, 233, 225, 112},
 		}
-
-		Convey("The get should return a type 8 message", func() {
-			Convey("Where the message is not nil", func() {
-				So(type8, ShouldNotBeNil)
+		Context("The get should return a type 8 message", func() {
+			It("Where the message is not nil", func() {
+				Expect(type8).To(Not(BeNil()))
 			})
 		})
-
-		Convey("The get should not return an error", func() {
-			So(err, ShouldBeNil)
+		It("The get should not return an error", func() {
+			Expect(err).To(BeNil())
 		})
-
-		Convey("The fields should be populated correctly", func() {
-			So(type8, ShouldResemble, expected)
+		It("The fields should be populated correctly", func() {
+			Expect(type8).To(Equal(expected))
 		})
 	})
-}
+})

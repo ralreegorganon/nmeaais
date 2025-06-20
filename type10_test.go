@@ -1,13 +1,12 @@
 package nmeaais
 
 import (
-	"testing"
-
-	. "github.com/smartystreets/goconvey/convey"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
-func TestType10MessageProcessing(t *testing.T) {
-	Convey("When processing a type 10 message", t, func() {
+var _ = Describe("Type10MessageProcessing", func() {
+	Describe("When processing a type 10 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,:5MwvSQGRlc8,0*45",
 		}
@@ -22,19 +21,16 @@ func TestType10MessageProcessing(t *testing.T) {
 			MMSI:            367001230,
 			DestinationMMSI: 367186610,
 		}
-
-		Convey("The get should return a type 10 message", func() {
-			Convey("Where the message is not nil", func() {
-				So(type10, ShouldNotBeNil)
+		Context("The get should return a type 10 message", func() {
+			It("Where the message is not nil", func() {
+				Expect(type10).To(Not(BeNil()))
 			})
 		})
-
-		Convey("The get should not return an error", func() {
-			So(err, ShouldBeNil)
+		It("The get should not return an error", func() {
+			Expect(err).To(BeNil())
 		})
-
-		Convey("The fields should be populated correctly", func() {
-			So(type10, ShouldResemble, expected)
+		It("The fields should be populated correctly", func() {
+			Expect(type10).To(Equal(expected))
 		})
 	})
-}
+})

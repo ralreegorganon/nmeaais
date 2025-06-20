@@ -1,10 +1,10 @@
 package nmeaais
 
 import (
-	"testing"
 	"time"
 
-	. "github.com/smartystreets/goconvey/convey"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
 func accumulateInput(raws []string, d *Decoder) {
@@ -17,8 +17,8 @@ func accumulateInput(raws []string, d *Decoder) {
 	close(d.Input)
 }
 
-func TestDecoder(t *testing.T) {
-	Convey("When decoding a type 1 message", t, func() {
+var _ = Describe("Decoder", func() {
+	Describe("When decoding a type 1 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,15RTgt0PAso;90TKcjM8h6g208CQ,0*4A",
 		}
@@ -26,13 +26,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 1 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &PositionReportClassA{})
+		It("The decoder should return a type 1 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&PositionReportClassA{}))
 		})
 	})
-
-	Convey("When decoding a type 2 message", t, func() {
+	Describe("When decoding a type 2 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,B,25Cjtd0Oj;Jp7ilG7=UkKBoB0<06,0*60",
 		}
@@ -40,13 +38,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 2 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &PositionReportClassA{})
+		It("The decoder should return a type 2 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&PositionReportClassA{}))
 		})
 	})
-
-	Convey("When decoding a type 3 message", t, func() {
+	Describe("When decoding a type 3 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,33uIKN000011dcNQ==j<5`Qj059S,0*50",
 		}
@@ -54,13 +50,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 3 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &PositionReportClassA{})
+		It("The decoder should return a type 3 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&PositionReportClassA{}))
 		})
 	})
-
-	Convey("When decoding a type 4 message", t, func() {
+	Describe("When decoding a type 4 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,B,402R3dAurtDNn0n7C@QIev100@PE,0*45",
 		}
@@ -68,13 +62,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 4 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &BaseStationReport{})
+		It("The decoder should return a type 4 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&BaseStationReport{}))
 		})
 	})
-
-	Convey("When decoding a type 5 message", t, func() {
+	Describe("When decoding a type 5 message", func() {
 		raws := []string{
 			"!AIVDM,2,1,9,B,55OER>01sWpeL@GS?CM0th5:1=@u8n222222220P1PJ354AB0;PCPj3lPAiH,0*1B",
 			"!AIVDM,2,2,9,B,88888888880,2*2E",
@@ -83,13 +75,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 5 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &StaticAndVoyageRelatedData{})
+		It("The decoder should return a type 5 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&StaticAndVoyageRelatedData{}))
 		})
 	})
-
-	Convey("When decoding a type 6 message", t, func() {
+	Describe("When decoding a type 6 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,65D7EH5DoW300400A@E=B04<d0,4*46",
 		}
@@ -97,13 +87,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 6 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &BinaryAddressedMessage{})
+		It("The decoder should return a type 6 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&BinaryAddressedMessage{}))
 		})
 	})
-
-	Convey("When decoding a type 7 message", t, func() {
+	Describe("When decoding a type 7 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,75MwQW2G`lEH,0*6C",
 		}
@@ -111,13 +99,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 7 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &BinaryAcknowledge{})
+		It("The decoder should return a type 7 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&BinaryAcknowledge{}))
 		})
 	})
-
-	Convey("When decoding a type 8 message", t, func() {
+	Describe("When decoding a type 8 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,B,85Mwqd1Kf4dldnKQ<>bW6RGmDu<6U5f1>W<LMGV85qe;dkv@rN5h,0*7D",
 		}
@@ -125,13 +111,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 8 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &BinaryBroadcastMessage{})
+		It("The decoder should return a type 8 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&BinaryBroadcastMessage{}))
 		})
 	})
-
-	Convey("When decoding a type 9 message", t, func() {
+	Describe("When decoding a type 9 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,91b76w001L163a8QIdP8O<h00PS6,0*10",
 		}
@@ -139,13 +123,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 9 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &StandardSARAircraftPositionReport{})
+		It("The decoder should return a type 9 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&StandardSARAircraftPositionReport{}))
 		})
 	})
-
-	Convey("When decoding a type 10 message", t, func() {
+	Describe("When decoding a type 10 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,:5MwvSQGRlc8,0*45",
 		}
@@ -153,13 +135,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 10 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &UTCDateInquiry{})
+		It("The decoder should return a type 10 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&UTCDateInquiry{}))
 		})
 	})
-
-	Convey("When decoding a type 11 message", t, func() {
+	Describe("When decoding a type 11 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,;5N;BdQuw;:i5mAi:nS27jQ02000,0*3B",
 		}
@@ -167,13 +147,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 11 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &UTCDateResponse{})
+		It("The decoder should return a type 11 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&UTCDateResponse{}))
 		})
 	})
-
-	Convey("When decoding a type 12 message", t, func() {
+	Describe("When decoding a type 12 message", func() {
 		raws := []string{
 			"!AIVDM,2,1,1,A,<D62222222208:5vmEEEOPAGEso0009m5@CFb;vNnQIsW008t>AOOfbbbWp4,0*40",
 			"!AIVDM,2,2,1,A,=fD:8=w0?A@,2*4C",
@@ -182,13 +160,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 12 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &AddressedSafetyRelated{})
+		It("The decoder should return a type 12 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&AddressedSafetyRelated{}))
 		})
 	})
-
-	Convey("When decoding a type 13 message", t, func() {
+	Describe("When decoding a type 13 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,=4WCf22Gaw0`,0*5C",
 		}
@@ -196,13 +172,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 13 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &SafetyRelatedAcknowledge{})
+		It("The decoder should return a type 13 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&SafetyRelatedAcknowledge{}))
 		})
 	})
-
-	Convey("When decoding a type 14 message", t, func() {
+	Describe("When decoding a type 14 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,>>M;1IM<59B1@E=@,0*5E",
 		}
@@ -210,13 +184,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 14 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &SafetyRelatedBroadcast{})
+		It("The decoder should return a type 14 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&SafetyRelatedBroadcast{}))
 		})
 	})
-
-	Convey("When decoding a type 15 message", t, func() {
+	Describe("When decoding a type 15 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,B,?h3Ovj@p>iBPD00,2*21",
 		}
@@ -224,13 +196,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 15 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &Interrogation{})
+		It("The decoder should return a type 15 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&Interrogation{}))
 		})
 	})
-
-	Convey("When decoding a type 16 message", t, func() {
+	Describe("When decoding a type 16 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,B,@h3OvjBGaw3h3h0000000000,0*7E",
 		}
@@ -238,13 +208,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 16 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &AssignmentModeCommand{})
+		It("The decoder should return a type 16 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&AssignmentModeCommand{}))
 		})
 	})
-
-	Convey("When decoding a type 17 message", t, func() {
+	Describe("When decoding a type 17 message", func() {
 		raws := []string{
 			"!AIVDM,2,1,5,A,A02VqLPA4I6C07h5Ed1h<OrsuBTTwS?r:C?w`?la<gno1RTRwSP9:BcurA8a,0*3A",
 			"!AIVDM,2,2,5,A,:Oko02TSwu8<:Jbb,0*11",
@@ -253,13 +221,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 17 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &DGNSSBroadcastBinaryMessage{})
+		It("The decoder should return a type 17 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&DGNSSBroadcastBinaryMessage{}))
 		})
 	})
-
-	Convey("When decoding a type 18 message", t, func() {
+	Describe("When decoding a type 18 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,B52Mu0@00El8HO6oJS<Igwk5kP06,0*7B",
 		}
@@ -267,13 +233,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 18 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &PositionReportClassBStandard{})
+		It("The decoder should return a type 18 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&PositionReportClassBStandard{}))
 		})
 	})
-
-	Convey("When decoding a type 19 message", t, func() {
+	Describe("When decoding a type 19 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,B,C5N3SRgPEnJGEBT>NhWAwwo862PaLELTBJ:V00000000S0D:R220,0*0B",
 		}
@@ -281,13 +245,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 19 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &PositionReportClassBExtended{})
+		It("The decoder should return a type 19 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&PositionReportClassBExtended{}))
 		})
 	})
-
-	Convey("When decoding a type 20 message", t, func() {
+	Describe("When decoding a type 20 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,B,Dh3Ovj@11N>6;HfGL00Nfp0,2*1B",
 		}
@@ -295,13 +257,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 20 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &DataLinkManagementMessage{})
+		It("The decoder should return a type 20 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&DataLinkManagementMessage{}))
 		})
 	})
-
-	Convey("When decoding a type 21 message", t, func() {
+	Describe("When decoding a type 21 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,E>k1kFd1WWUh4W62b@1:WdhHpP0J`lV<AQ@:000003vP10,4*69",
 		}
@@ -309,13 +269,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 21 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &AidToNavigationReport{})
+		It("The decoder should return a type 21 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&AidToNavigationReport{}))
 		})
 	})
-
-	Convey("When decoding a type 22 message", t, func() {
+	Describe("When decoding a type 22 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,B,FGsEEEEv15NU47?000G@8JnKKuwGFT<V0<1gg6QvmEEEOP@,2*4D",
 		}
@@ -323,13 +281,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 22 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &ChannelManagement{})
+		It("The decoder should return a type 22 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&ChannelManagement{}))
 		})
 	})
-
-	Convey("When decoding a type 23 message", t, func() {
+	Describe("When decoding a type 23 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12",
 		}
@@ -337,13 +293,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 23 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &GroupAssignmentCommand{})
+		It("The decoder should return a type 23 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&GroupAssignmentCommand{}))
 		})
 	})
-
-	Convey("When decoding a type 24 A message", t, func() {
+	Describe("When decoding a type 24 A message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,H7P<1>1LPU@D8U8A<0000000000,2*6C",
 		}
@@ -351,13 +305,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 24 A message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &StaticDataReportA{})
+		It("The decoder should return a type 24 A message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&StaticDataReportA{}))
 		})
 	})
-
-	Convey("When decoding a type 24 B message", t, func() {
+	Describe("When decoding a type 24 B message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,H3`fKe4T>1F93?0@3pipp01@4320,0*77",
 		}
@@ -365,13 +317,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 24 B message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &StaticDataReportB{})
+		It("The decoder should return a type 24 B message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&StaticDataReportB{}))
 		})
 	})
-
-	Convey("When decoding a type 25 message", t, func() {
+	Describe("When decoding a type 25 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,I8IRGB40QPPa0:<HP::V=gwv0l48,0*0E",
 		}
@@ -379,13 +329,11 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 275message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &SingleSlotBinaryMessage{})
+		It("The decoder should return a type 275message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&SingleSlotBinaryMessage{}))
 		})
 	})
-
-	Convey("When decoding a type 27 message", t, func() {
+	Describe("When decoding a type 27 message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,Km31e<1KQ?SO4P5d,0*66",
 		}
@@ -393,9 +341,8 @@ func TestDecoder(t *testing.T) {
 		d := NewDecoder()
 		accumulateInput(raws, d)
 		result := <-d.Output
-
-		Convey("The decoder should return a type 27 message", func() {
-			So(result.DecodedMessage, ShouldHaveSameTypeAs, &LongRangeAISBroadcast{})
+		It("The decoder should return a type 27 message", func() {
+			Expect(result.DecodedMessage).To(BeAssignableToTypeOf(&LongRangeAISBroadcast{}))
 		})
 	})
-}
+})

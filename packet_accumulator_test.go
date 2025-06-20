@@ -2,10 +2,11 @@ package nmeaais
 
 import (
 	"fmt"
-	"testing"
+
 	"time"
 
-	. "github.com/smartystreets/goconvey/convey"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
 func accumulatePackets(raws []string, pa *PacketAccumulator) {
@@ -34,9 +35,9 @@ func accumulatePacketsWithDelay(raws []string, delay time.Duration, pa *PacketAc
 	close(pa.Packets)
 }
 
-func TestPacketAccumulator(t *testing.T) {
-	Convey("When processing a multi-part message", t, func() {
-		Convey("That does not contain a matching number of packets", func() {
+var _ = Describe("PacketAccumulator", func() {
+	Describe("When processing a multi-part message", func() {
+		Context("That does not contain a matching number of packets", func() {
 			raws := []string{
 				"!AIVDM,2,1,3,B,55P5TL01VIaAL@7WKO@mBplU@<PDhh000000001S;AJ::4A80?4i@E53,0*3E",
 			}
@@ -44,13 +45,11 @@ func TestPacketAccumulator(t *testing.T) {
 			pa := NewPacketAccumulator()
 			go accumulatePackets(raws, pa)
 			result := <-pa.Results
-
-			Convey("The accumulator shouldn't return a result", func() {
-				So(result, ShouldBeNil)
+			It("The accumulator shouldn't return a result", func() {
+				Expect(result).To(BeNil())
 			})
 		})
-
-		Convey("That has packets out of sequence", func() {
+		Context("That has packets out of sequence", func() {
 			raws := []string{
 				"!AIVDM,2,2,3,B,1@0000000000000,2*55",
 				"!AIVDM,2,1,3,B,55P5TL01VIaAL@7WKO@mBplU@<PDhh000000001S;AJ::4A80?4i@E53,0*3E",
@@ -59,19 +58,17 @@ func TestPacketAccumulator(t *testing.T) {
 			pa := NewPacketAccumulator()
 			go accumulatePackets(raws, pa)
 			result := <-pa.Results
-
-			Convey("The accumulator should return a message", func() {
-				Convey("Where the message is not nil", func() {
-					So(result.Message, ShouldNotBeNil)
+			Context("The accumulator should return a message", func() {
+				It("Where the message is not nil", func() {
+					Expect(result.Message).To(Not(BeNil()))
 				})
-				Convey("Where the packets have been sorted", func() {
-					So(result.Packets[0].FragmentNumber, ShouldEqual, 1)
-					So(result.Packets[1].FragmentNumber, ShouldEqual, 2)
+				It("Where the packets have been sorted", func() {
+					Expect(result.Packets[0].FragmentNumber).To(Equal(int64(1)))
+					Expect(result.Packets[1].FragmentNumber).To(Equal(int64(2)))
 				})
 			})
 		})
-
-		Convey("That has packets from multiple incomplete messages", func() {
+		Context("That has packets from multiple incomplete messages", func() {
 			raws := []string{
 				"!AIVDM,2,1,3,B,55P5TL01VIaAL@7WKO@mBplU@<PDhh000000001S;AJ::4A80?4i@E53,0*3E",
 				"!AIVDM,2,2,,B,1@0000000000000,2*66",
@@ -80,13 +77,11 @@ func TestPacketAccumulator(t *testing.T) {
 			pa := NewPacketAccumulator()
 			go accumulatePackets(raws, pa)
 			result := <-pa.Results
-
-			Convey("The accumulator shouldn't return a result", func() {
-				So(result, ShouldBeNil)
+			It("The accumulator shouldn't return a result", func() {
+				Expect(result).To(BeNil())
 			})
 		})
-
-		Convey("That has packets too far apart in time", func() {
+		Context("That has packets too far apart in time", func() {
 			raws := []string{
 				"!AIVDM,2,1,3,B,55P5TL01VIaAL@7WKO@mBplU@<PDhh000000001S;AJ::4A80?4i@E53,0*3E",
 				"!AIVDM,2,2,3,B,1@0000000000000,2*55",
@@ -95,13 +90,11 @@ func TestPacketAccumulator(t *testing.T) {
 			pa := NewPacketAccumulator()
 			go accumulatePacketsWithDelay(raws, time.Duration(3)*time.Second, pa)
 			result := <-pa.Results
-
-			Convey("The accumulator shouldn't return a result", func() {
-				So(result, ShouldBeNil)
+			It("The accumulator shouldn't return a result", func() {
+				Expect(result).To(BeNil())
 			})
 		})
-
-		Convey("That has interwoven packets with colliding sequential message identifier", func() {
+		Context("That has interwoven packets with colliding sequential message identifier", func() {
 			raws := []string{
 				"!AIVDM,2,1,5,A,55MuQO000001L@;SGO8dDhiV0l4F22222222221J0000000004430E2CUCH0,0*28",
 				"!AIVDM,2,1,5,A,55NHRFP2@pvmL@GS;ODPu>1<TiHE:0598uN2221620s8:4V@07li@E531H5h,0*01",
@@ -113,27 +106,26 @@ func TestPacketAccumulator(t *testing.T) {
 			go accumulatePackets(raws, pa)
 
 			result1 := <-pa.Results
-			Convey("The accumulator should return the first message", func() {
-				Convey("Where the message is not nil", func() {
-					So(result1.Message, ShouldNotBeNil)
+			Context("The accumulator should return the first message", func() {
+				It("Where the message is not nil", func() {
+					Expect(result1.Message).To(Not(BeNil()))
 				})
 			})
-			Convey("The accumulator should not return an error for the first message", func() {
-				So(result1.Error, ShouldBeNil)
+			It("The accumulator should not return an error for the first message", func() {
+				Expect(result1.Error).To(BeNil())
 			})
 
 			result2 := <-pa.Results
-			Convey("The accumulator should return the second message", func() {
-				Convey("Where the message is not nil", func() {
-					So(result2.Message, ShouldNotBeNil)
+			Context("The accumulator should return the second message", func() {
+				It("Where the message is not nil", func() {
+					Expect(result2.Message).To(Not(BeNil()))
 				})
 			})
-			Convey("The accumulator should not return an error for the second message", func() {
-				So(result2.Error, ShouldBeNil)
+			It("The accumulator should not return an error for the second message", func() {
+				Expect(result2.Error).To(BeNil())
 			})
 		})
-
-		Convey("That has interwoven packets on channels A and B", func() {
+		Context("That has interwoven packets on channels A and B", func() {
 			raws := []string{
 				"!AIVDM,2,1,6,B,542M92h00001@<7;?G0PD4i@R0<tqA8tj37>220o0h:2240Ht50000000000,0*3B",
 				"!AIVDM,2,1,2,A,542M92h00001@<7;?G0PD4i@R0<tqA8tj37>220o0h:2240Ht500000000000000,0*3C",
@@ -145,27 +137,26 @@ func TestPacketAccumulator(t *testing.T) {
 			go accumulatePackets(raws, pa)
 
 			result1 := <-pa.Results
-			Convey("The accumulator should return the first message", func() {
-				Convey("Where the message is not nil", func() {
-					So(result1.Message, ShouldNotBeNil)
+			Context("The accumulator should return the first message", func() {
+				It("Where the message is not nil", func() {
+					Expect(result1.Message).To(Not(BeNil()))
 				})
 			})
-			Convey("The accumulator should not return an error for the first message", func() {
-				So(result1.Error, ShouldBeNil)
+			It("The accumulator should not return an error for the first message", func() {
+				Expect(result1.Error).To(BeNil())
 			})
 
 			result2 := <-pa.Results
-			Convey("The accumulator should return the second message", func() {
-				Convey("Where the message is not nil", func() {
-					So(result2.Message, ShouldNotBeNil)
+			Context("The accumulator should return the second message", func() {
+				It("Where the message is not nil", func() {
+					Expect(result2.Message).To(Not(BeNil()))
 				})
 			})
-			Convey("The accumulator should not return an error for the second message", func() {
-				So(result2.Error, ShouldBeNil)
+			It("The accumulator should not return an error for the second message", func() {
+				Expect(result2.Error).To(BeNil())
 			})
 		})
-
-		Convey("That is a valid NMEA 0183 format", func() {
+		Context("That is a valid NMEA 0183 format", func() {
 			raws := []string{
 				"!AIVDM,2,1,3,B,55P5TL01VIaAL@7WKO@mBplU@<PDhh000000001S;AJ::4A80?4i@E53,0*3E",
 				"!AIVDM,2,2,3,B,1@0000000000000,2*55",
@@ -174,20 +165,18 @@ func TestPacketAccumulator(t *testing.T) {
 			pa := NewPacketAccumulator()
 			go accumulatePackets(raws, pa)
 			result := <-pa.Results
-
-			Convey("The accumulator should return a message", func() {
-				Convey("Where the message is not nil", func() {
-					So(result.Message, ShouldNotBeNil)
+			Context("The accumulator should return a message", func() {
+				It("Where the message is not nil", func() {
+					Expect(result.Message).To(Not(BeNil()))
 				})
 			})
-			Convey("The accumulator should not return an error", func() {
-				So(result.Error, ShouldBeNil)
+			It("The accumulator should not return an error", func() {
+				Expect(result.Error).To(BeNil())
 			})
 		})
 	})
-	
-	Convey("When processing a single-part message", t, func() {
-		Convey("That is a valid NMEA 0183 format", func() {
+	Describe("When processing a single-part message", func() {
+		Context("That is a valid NMEA 0183 format", func() {
 			raws := []string{
 				"!AIVDM,1,1,,A,133m@ogP00PD;88MD5MTDww@2D7k,0*46",
 			}
@@ -195,18 +184,16 @@ func TestPacketAccumulator(t *testing.T) {
 			pa := NewPacketAccumulator()
 			go accumulatePackets(raws, pa)
 			result := <-pa.Results
-
-			Convey("The accumulator should return a message", func() {
-				Convey("Where the message is not nil", func() {
-					So(result.Message, ShouldNotBeNil)
+			Context("The accumulator should return a message", func() {
+				It("Where the message is not nil", func() {
+					Expect(result.Message).To(Not(BeNil()))
 				})
 			})
-			Convey("The accumulator should not return an error", func() {
-				So(result.Error, ShouldBeNil)
+			It("The accumulator should not return an error", func() {
+				Expect(result.Error).To(BeNil())
 			})
 		})
-
-		Convey("That starts with !BSVDM", func() {
+		Context("That starts with !BSVDM", func() {
 			raws := []string{
 				"!BSVDM,1,1,,A,13mJDd040=0Fr:TRk7wv0JwT2@Mu,0*45",
 			}
@@ -214,20 +201,18 @@ func TestPacketAccumulator(t *testing.T) {
 			pa := NewPacketAccumulator()
 			go accumulatePackets(raws, pa)
 			result := <-pa.Results
-
-			Convey("The accumulator should return a message", func() {
-				Convey("Where the message is not nil", func() {
-					So(result.Message, ShouldNotBeNil)
+			Context("The accumulator should return a message", func() {
+				It("Where the message is not nil", func() {
+					Expect(result.Message).To(Not(BeNil()))
 				})
 			})
-			Convey("The accumulator should not return an error", func() {
-				So(result.Error, ShouldBeNil)
+			It("The accumulator should not return an error", func() {
+				Expect(result.Error).To(BeNil())
 			})
 		})
 	})
-
-	Convey("When processing a message", t, func() {
-		Convey("That has an empty payload", func() {
+	Describe("When processing a message", func() {
+		Context("That has an empty payload", func() {
 			raws := []string{
 				"!AIVDM,1,1,,A,,0*26",
 			}
@@ -235,14 +220,13 @@ func TestPacketAccumulator(t *testing.T) {
 			pa := NewPacketAccumulator()
 			go accumulatePackets(raws, pa)
 			result := <-pa.Results
-
-			Convey("The accumulator should return nil for the message", func() {
-				So(result.Message, ShouldBeNil)
+			It("The accumulator should return nil for the message", func() {
+				Expect(result.Message).To(BeNil())
 			})
-			Convey("The accumulator should return an error", func() {
-				So(result.Error, ShouldNotBeNil)
+			It("The accumulator should return an error", func() {
+				Expect(result.Error).To(Not(BeNil()))
 			})
 		})
 	})
 
-}
+})

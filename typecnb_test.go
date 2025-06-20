@@ -1,13 +1,12 @@
 package nmeaais
 
 import (
-	"testing"
-
-	. "github.com/smartystreets/goconvey/convey"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
-func TestType1MessageProcessing(t *testing.T) {
-	Convey("When processing a cnb type (1,2,3) message", t, func() {
+var _ = Describe("Type1MessageProcessing", func() {
+	Describe("When processing a cnb type (1,2,3) message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,15RTgt0PAso;90TKcjM8h6g208CQ,0*4A",
 		}
@@ -33,23 +32,19 @@ func TestType1MessageProcessing(t *testing.T) {
 			RAIM:              false,
 			RadioStatus:       34017,
 		}
-
-		Convey("The get should return a cnb type (1,2,3) message", func() {
-			Convey("Where the message is not nil", func() {
-				So(type1, ShouldNotBeNil)
+		Context("The get should return a cnb type (1,2,3) message", func() {
+			It("Where the message is not nil", func() {
+				Expect(type1).To(Not(BeNil()))
 			})
 		})
-
-		Convey("The get should not return an error", func() {
-			So(err, ShouldBeNil)
+		It("The get should not return an error", func() {
+			Expect(err).To(BeNil())
 		})
-
-		Convey("The fields should be populated correctly", func() {
-			So(type1, ShouldResemble, expected)
+		It("The fields should be populated correctly", func() {
+			Expect(type1).To(Equal(expected))
 		})
 	})
-
-	Convey("When processing an invalid cnb type (1,2,3) message", t, func() {
+	Describe("When processing an invalid cnb type (1,2,3) message", func() {
 		raws := []string{
 			"!AIVDM,1,1,,A,13n;;V001`0q,0*0C",
 		}
@@ -57,16 +52,14 @@ func TestType1MessageProcessing(t *testing.T) {
 		packets := buildPackets(raws)
 		message, err := Process(packets)
 		type1, err := message.GetAsPositionReportClassA()
-
-		Convey("The get should return a cnb type (1,2,3) message", func() {
-			Convey("Where the message is nil", func() {
-				So(type1, ShouldBeNil)
+		Context("The get should return a cnb type (1,2,3) message", func() {
+			It("Where the message is nil", func() {
+				Expect(type1).To(BeNil())
 			})
 		})
-
-		Convey("The get should return an error", func() {
-			So(err, ShouldNotBeNil)
+		It("The get should return an error", func() {
+			Expect(err).To(Not(BeNil()))
 		})
 
 	})
-}
+})
