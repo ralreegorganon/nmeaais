@@ -14,6 +14,5 @@ require (
 	github.com/smartystreets/assertions v1.2.0 // indirect
 	github.com/stretchr/testify v1.4.0 // indirect
 	golang.org/x/sys v0.0.0-20220614162138-6c1b26c55098 // indirect
-	golang.org/x/tools v0.0.0-20190328211700-ab21143f2384 // indirect
 	gopkg.in/yaml.v2 v2.2.4 // indirect
 )
