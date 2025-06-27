@@ -9,9 +9,11 @@ import (
 	"time"
 )
 
-var port = flag.String("port", "32778", "TCP port to bind to")
-var source = flag.String("source", "nmeadata", "Text file containing NMEA data")
-var interval = flag.Int64("interval", 1000000, "Interval in nanoseconds between sentences")
+var (
+	port     = flag.String("port", "32778", "TCP port to bind to")
+	source   = flag.String("source", "nmeadata", "Text file containing NMEA data")
+	interval = flag.Int64("interval", 1000000, "Interval in nanoseconds between sentences")
+)
 
 func main() {
 	flag.Parse()
@@ -49,7 +51,7 @@ func main() {
 		i := 0
 
 		go func() {
-			for _ = range ticker.C {
+			for range ticker.C {
 				if i == max {
 					i = 0
 				} else {

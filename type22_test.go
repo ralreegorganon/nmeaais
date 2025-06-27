@@ -13,7 +13,7 @@ var _ = Describe("Type22MessageProcessing", func() {
 			}
 
 			packets := buildPackets(raws)
-			message, err := Process(packets)
+			message, _ := Process(packets)
 			type22, err := message.GetAsChannelManagement()
 
 			expected := &ChannelManagement{
@@ -53,7 +53,7 @@ var _ = Describe("Type22MessageProcessing", func() {
 			}
 
 			packets := buildPackets(raws)
-			message, err := Process(packets)
+			message, _ := Process(packets)
 			type22, err := message.GetAsChannelManagement()
 
 			expected := &ChannelManagement{

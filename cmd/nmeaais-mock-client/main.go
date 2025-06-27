@@ -9,9 +9,11 @@ import (
 	"time"
 )
 
-var remote = flag.String("remote", "127.0.0.1:32780", "Remote address to send data to")
-var source = flag.String("source", "nmeadata", "Text file containing NMEA data")
-var interval = flag.Int64("interval", 1000, "Interval in milliseconds between sentences")
+var (
+	remote   = flag.String("remote", "127.0.0.1:32780", "Remote address to send data to")
+	source   = flag.String("source", "nmeadata", "Text file containing NMEA data")
+	interval = flag.Int64("interval", 1000, "Interval in milliseconds between sentences")
+)
 
 func main() {
 	flag.Parse()
@@ -34,7 +36,7 @@ func main() {
 	for {
 		conn, err := net.Dial("tcp", *remote)
 		if err != nil {
-			time.Sleep(10)
+			time.Sleep(10 * time.Second)
 			continue
 		}
 		w := bufio.NewWriter(conn)
@@ -42,7 +44,7 @@ func main() {
 		i := 0
 
 		go func() {
-			for _ = range ticker.C {
+			for range ticker.C {
 				if i == max {
 					i = 0
 				} else {
@@ -58,6 +60,6 @@ func main() {
 			}
 		}()
 
-		_ = <-fault
+		<-fault
 	}
 }

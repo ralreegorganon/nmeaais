@@ -12,7 +12,7 @@ var _ = Describe("Type16MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type16, err := message.GetAsAssignmentModeCommand()
 
 		expected := &AssignmentModeCommand{

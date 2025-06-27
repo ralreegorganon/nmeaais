@@ -12,7 +12,7 @@ var _ = Describe("Type19MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type19, err := message.GetAsPositionReportClassBExtended()
 
 		expected := &PositionReportClassBExtended{

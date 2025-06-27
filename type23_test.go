@@ -12,7 +12,7 @@ var _ = Describe("Type23MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type23, err := message.GetAsGroupAssignmentCommand()
 
 		expected := &GroupAssignmentCommand{

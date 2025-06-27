@@ -24,7 +24,7 @@ var _ = Describe("Type4MessageProcessing", func() {
 			}
 
 			packets = buildPackets(raws)
-			message, err = Process(packets)
+			message, _ = Process(packets)
 			type4, err = message.GetAsBaseStationReport()
 
 			expected = &BaseStationReport{

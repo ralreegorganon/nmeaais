@@ -12,7 +12,7 @@ var _ = Describe("Type27MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type27, err := message.GetAsLongRangeAISBroadcast()
 
 		expected := &LongRangeAISBroadcast{

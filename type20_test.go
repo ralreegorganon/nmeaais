@@ -12,7 +12,7 @@ var _ = Describe("Type20MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type20, err := message.GetAsDataLinkManagementMessage()
 
 		expected := &DataLinkManagementMessage{

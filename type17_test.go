@@ -13,7 +13,7 @@ var _ = Describe("Type17MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type17, err := message.GetAsDGNSSBroadcastBinaryMessage()
 
 		expected := &DGNSSBroadcastBinaryMessage{

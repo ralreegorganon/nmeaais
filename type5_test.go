@@ -13,7 +13,7 @@ var _ = Describe("Type5MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type5, err := message.GetAsStaticAndVoyageRelatedData()
 
 		expected := &StaticAndVoyageRelatedData{
@@ -56,7 +56,7 @@ var _ = Describe("Type5MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type5, err := message.GetAsStaticAndVoyageRelatedData()
 		It("The get should return an error", func() {
 			Expect(err).To(Not(BeNil()))

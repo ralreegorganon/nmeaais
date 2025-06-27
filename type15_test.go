@@ -12,7 +12,7 @@ var _ = Describe("Type15MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type15, err := message.GetAsInterrogation()
 
 		expected := &Interrogation{

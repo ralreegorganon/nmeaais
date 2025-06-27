@@ -12,7 +12,7 @@ var _ = Describe("Type6MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type6, err := message.GetAsBinaryAddressedMessage()
 
 		expected := &BinaryAddressedMessage{

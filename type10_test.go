@@ -12,7 +12,7 @@ var _ = Describe("Type10MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type10, err := message.GetAsUTCDateInquiry()
 
 		expected := &UTCDateInquiry{

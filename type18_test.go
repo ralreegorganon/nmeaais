@@ -12,7 +12,7 @@ var _ = Describe("Type18MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type18, err := message.GetAsPositionReportClassBStandard()
 
 		expected := &PositionReportClassBStandard{
@@ -53,7 +53,7 @@ var _ = Describe("Type18MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type18, err := message.GetAsPositionReportClassBStandard()
 		Context("The get should return a type 18 message", func() {
 			It("Where the message is nil", func() {

@@ -12,7 +12,7 @@ var _ = Describe("Type9MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type9, err := message.GetAsStandardSARAircraftPositionReport()
 
 		expected := &StandardSARAircraftPositionReport{

@@ -12,7 +12,7 @@ var _ = Describe("Type8MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type8, err := message.GetAsBinaryBroadcastMessage()
 
 		expected := &BinaryBroadcastMessage{

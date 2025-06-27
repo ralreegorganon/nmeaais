@@ -13,7 +13,7 @@ var _ = Describe("Type21MessageProcessing", func() {
 			}
 
 			packets := buildPackets(raws)
-			message, err := Process(packets)
+			message, _ := Process(packets)
 			type21, err := message.GetAsAidToNavigationReport()
 
 			expected := &AidToNavigationReport{
@@ -56,7 +56,7 @@ var _ = Describe("Type21MessageProcessing", func() {
 			}
 
 			packets := buildPackets(raws)
-			message, err := Process(packets)
+			message, _ := Process(packets)
 			type21, err := message.GetAsAidToNavigationReport()
 
 			expected := &AidToNavigationReport{

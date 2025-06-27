@@ -12,7 +12,7 @@ var _ = Describe("Type1MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type1, err := message.GetAsPositionReportClassA()
 
 		expected := &PositionReportClassA{
@@ -50,7 +50,7 @@ var _ = Describe("Type1MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type1, err := message.GetAsPositionReportClassA()
 		Context("The get should return a cnb type (1,2,3) message", func() {
 			It("Where the message is nil", func() {
@@ -60,6 +60,5 @@ var _ = Describe("Type1MessageProcessing", func() {
 		It("The get should return an error", func() {
 			Expect(err).To(Not(BeNil()))
 		})
-
 	})
 })

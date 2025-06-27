@@ -14,7 +14,7 @@ var _ = Describe("Type11MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type11, err := message.GetAsUTCDateResponse()
 
 		expected := &UTCDateResponse{

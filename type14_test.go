@@ -12,7 +12,7 @@ var _ = Describe("Type14MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type14, err := message.GetAsSafetyRelatedBroadcast()
 
 		expected := &SafetyRelatedBroadcast{

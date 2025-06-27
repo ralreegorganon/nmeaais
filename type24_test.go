@@ -12,7 +12,7 @@ var _ = Describe("Type24AMessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type24, err := message.GetAsStaticDataReportA()
 
 		expected := &StaticDataReportA{
@@ -43,7 +43,7 @@ var _ = Describe("Type24BMessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type24, err := message.GetAsStaticDataReportB()
 
 		expected := &StaticDataReportB{

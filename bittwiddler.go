@@ -76,7 +76,7 @@ func asString(unarmoredPayload []byte, start uint, width uint) string {
 		}
 	}
 
-	value = strings.TrimSpace(strings.Replace(value, "@", " ", -1))
+	value = strings.TrimSpace(strings.ReplaceAll(value, "@", " "))
 	return value
 }
 

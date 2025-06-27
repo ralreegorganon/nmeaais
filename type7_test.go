@@ -12,7 +12,7 @@ var _ = Describe("Type7MessageProcessing", func() {
 		}
 
 		packets := buildPackets(raws)
-		message, err := Process(packets)
+		message, _ := Process(packets)
 		type7, err := message.GetAsBinaryAcknowledge()
 
 		expected := &BinaryAcknowledge{

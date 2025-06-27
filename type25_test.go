@@ -40,7 +40,7 @@ var _ = Describe("Type25MessageProcessing", func() {
 				}
 
 				packets := buildPackets(raws)
-				message, err := Process(packets)
+				message, _ := Process(packets)
 				type25, err := message.GetAsSingleSlotBinaryMessage()
 
 				expected := &SingleSlotBinaryMessage{
@@ -72,7 +72,7 @@ var _ = Describe("Type25MessageProcessing", func() {
 			}
 
 			packets := buildPackets(raws)
-			message, err := Process(packets)
+			message, _ := Process(packets)
 			type25, err := message.GetAsSingleSlotBinaryMessage()
 
 			expected := &SingleSlotBinaryMessage{
@@ -104,7 +104,7 @@ var _ = Describe("Type25MessageProcessing", func() {
 			}
 
 			packets := buildPackets(raws)
-			message, err := Process(packets)
+			message, _ := Process(packets)
 			type25, err := message.GetAsSingleSlotBinaryMessage()
 
 			expected := &SingleSlotBinaryMessage{
