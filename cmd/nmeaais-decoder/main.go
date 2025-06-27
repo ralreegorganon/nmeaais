@@ -3,7 +3,9 @@ package main
 import (
 	"bufio"
 	"flag"
+	"log/slog"
 	"net"
+	"os"
 	"reflect"
 	"strconv"
 	"strings"
@@ -11,22 +13,29 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/ralreegorganon/nmeaais"
-	log "github.com/sirupsen/logrus"
 )
 
 var source = flag.String("source", "localhost:32779", "TCP source for AIS data")
 var debug = flag.Bool("debug", false, "Run in debug mode")
 var debugFilter = flag.String("debugFilter", "", "Comma delimited list of message types to print when debugging")
 
+var logger *slog.Logger
+
 func init() {
-	log.SetLevel(log.InfoLevel)
+	logger = slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
+		Level: slog.LevelInfo,
+	}))
+	slog.SetDefault(logger)
 }
 
 func main() {
 	flag.Parse()
 
 	if *debug {
-		log.SetLevel(log.DebugLevel)
+		logger = slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		}))
+		slog.SetDefault(logger)
 	}
 
 	filter := make(map[int64]bool)
@@ -45,11 +54,10 @@ func main() {
 	go func() {
 		for o := range decoder.Output {
 			if o.Error != nil {
-				log.WithFields(log.Fields{
-					"err":     o.Error,
-					"packets": spew.Sdump(o.SourcePackets),
-					"message": spew.Sdump(o.SourceMessage),
-				}).Warning("Failed to process packets into message")
+				slog.Warn("Failed to process packets into message",
+					"err", o.Error,
+					"packets", spew.Sdump(o.SourcePackets),
+					"message", spew.Sdump(o.SourceMessage))
 				continue
 			}
 
@@ -66,7 +74,8 @@ func main() {
 
 	conn, err := net.Dial("tcp", *source)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Failed to connect to TCP source", "err", err)
+		os.Exit(1)
 	}
 
 	r := bufio.NewReader(conn)
@@ -74,7 +83,7 @@ func main() {
 	for {
 		line, err := r.ReadString('\n')
 		if err != nil {
-			log.WithField("err", err).Error("Couldn't read packet")
+			slog.Error("Couldn't read packet", "err", err)
 			close(decoder.Input)
 			break
 		}
