@@ -117,6 +117,9 @@ func (p *Packet) parseFragmentCount(part string) error {
 	if err != nil {
 		return err
 	}
+	if fragmentCount <= 0 {
+		return fmt.Errorf("nmeaais: fragment count of '%v' must be positive", fragmentCount)
+	}
 	p.FragmentCount = fragmentCount
 	return nil
 }
@@ -125,6 +128,9 @@ func (p *Packet) parseFragmentNumber(part string) error {
 	fragmentNumber, err := strconv.ParseInt(part, 10, 64)
 	if err != nil {
 		return err
+	}
+	if fragmentNumber <= 0 {
+		return fmt.Errorf("nmeaais: fragment number of '%v' must be positive (1-based)", fragmentNumber)
 	}
 	p.FragmentNumber = fragmentNumber
 	return nil
@@ -135,6 +141,9 @@ func (p *Packet) parseSequentialMessageID(part string) error {
 		sequentialMessageID, err := strconv.ParseInt(part, 10, 64)
 		if err != nil {
 			return err
+		}
+		if sequentialMessageID < 0 || sequentialMessageID > 9 {
+			return fmt.Errorf("nmeaais: sequential message ID of '%v' outside valid range of 0-9", sequentialMessageID)
 		}
 		p.SequentialMessageID = sequentialMessageID
 	}
@@ -172,6 +181,11 @@ func (p *Packet) parseFillBits(part string) error {
 }
 
 func (p *Packet) validate() error {
+	// Fragment number cannot exceed fragment count
+	if p.FragmentNumber > p.FragmentCount {
+		return fmt.Errorf("nmeaais: fragment number %v exceeds fragment count %v", p.FragmentNumber, p.FragmentCount)
+	}
+
 	rawForChecksum := strings.TrimSuffix(strings.TrimPrefix(p.Raw, p.StartDelimiter), "*"+p.Checksum)
 
 	var checksum uint8
