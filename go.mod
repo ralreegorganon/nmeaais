@@ -3,7 +3,6 @@ module github.com/ralreegorganon/nmeaais
 go 1.24
 
 require (
-	github.com/davecgh/go-spew v1.1.1
 	github.com/onsi/ginkgo/v2 v2.23.4
 	github.com/onsi/gomega v1.37.0
 )

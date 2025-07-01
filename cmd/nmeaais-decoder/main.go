@@ -2,7 +2,9 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"flag"
+	"fmt"
 	"log/slog"
 	"net"
 	"os"
@@ -11,7 +13,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/ralreegorganon/nmeaais"
 )
 
@@ -54,10 +55,12 @@ func main() {
 	go func() {
 		for o := range decoder.Output {
 			if o.Error != nil {
+				packetsJSON, _ := json.MarshalIndent(o.SourcePackets, "", "  ")
+				messageJSON, _ := json.MarshalIndent(o.SourceMessage, "", "  ")
 				slog.Warn("Failed to process packets into message",
 					"err", o.Error,
-					"packets", spew.Sdump(o.SourcePackets),
-					"message", spew.Sdump(o.SourceMessage))
+					"packets", string(packetsJSON),
+					"message", string(messageJSON))
 				continue
 			}
 
@@ -65,8 +68,10 @@ func main() {
 				messageType := reflect.ValueOf(o.DecodedMessage).Elem().FieldByName("MessageType").Int()
 				_, ok := filter[messageType]
 				if len(filter) == 0 || ok {
-					spew.Dump(o.SourcePackets)
-					spew.Dump(o.DecodedMessage)
+					packetsJSON, _ := json.MarshalIndent(o.SourcePackets, "", "  ")
+					messageJSON, _ := json.MarshalIndent(o.DecodedMessage, "", "  ")
+					fmt.Println(string(packetsJSON))
+					fmt.Println(string(messageJSON))
 				}
 			}
 		}
