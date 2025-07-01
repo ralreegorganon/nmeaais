@@ -11,16 +11,7 @@ This is a Go library and toolkit for processing NMEA AIS (Automatic Identificati
 **Build and Test:**
 
 ```bash
-# Run all tests with Ginkgo
-ginkgo ./...
-
-# Run tests with verbose output
-ginkgo -v ./...
-
-# Run specific test suite
-ginkgo ./type4_test.go
-
-# Traditional Go test (also works)
+# Traditional Go test
 go test ./...
 
 # Run tests with verbose output

@@ -1,0 +1,1 @@
+Go development environment for NMEA AIS library with fuzzing capabilities. Use 'go test' to run tests, 'go test -fuzz=.' to run fuzz tests. The project uses Ginkgo testing framework. Build tools with 'go build ./cmd/...'
