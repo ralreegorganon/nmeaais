@@ -17,6 +17,12 @@ go test ./...
 # Run tests with verbose output
 go test -v ./...
 
+# Run fuzz tests (comprehensive suite)
+./run_fuzz_tests.sh
+
+# Run specific fuzz test
+go test -fuzz=FuzzPacketParse -fuzztime=30s
+
 # Build all executables
 go build ./cmd/...
 
@@ -27,6 +33,9 @@ go build ./cmd/nmeaais-mock-listener
 
 # Clean up dependencies
 go mod tidy
+
+# Format code (automated via git hook)
+go fmt ./...
 ```
 
 **Running the Tools:**
@@ -49,13 +58,14 @@ go run ./cmd/nmeaais-mock-listener/main.go
 1. **Raw NMEA Input** → `packet.go` (parses NMEA sentences)
 2. **Packet Accumulation** → `packet_accumulator.go` (handles multi-part messages)
 3. **Message Decoding** → `decoder.go` + `message.go` (converts to structured data)
-4. **Type-Specific Processing** → `type4.go` through `type27.go` (AIS message types)
+4. **Type-Specific Processing** → `type4.go` through `type27.go` + `typecnb.go` (AIS message types)
 
 **Key Components:**
 
 - `bittwiddler.go`: Binary data extraction from AIS payloads
 - `type_common.go`: Shared functionality across message types
 - Each `typeX.go` file implements a specific AIS message type decoder
+- `typecnb.go`: common navigation block
 - `cmd/` executables provide TCP connectivity and testing tools
 
 **Message Flow:**
@@ -63,27 +73,34 @@ Raw NMEA sentences can span multiple packets for complex messages. The accumulat
 
 ## Testing Framework
 
-Uses Ginkgo testing framework with Gomega assertions. Tests are comprehensive with 29 test files covering all core functionality. The project includes test data files and mock implementations for development.
+Uses Ginkgo testing framework with Gomega assertions. Tests are comprehensive with 33 test files covering all core functionality. The project includes comprehensive fuzz testing for robustness.
 
 **Test Structure:**
 
 - BDD-style tests using `Describe`, `Context`, and `It` blocks
 - Expectations use Gomega matchers like `Expect(actual).To(Equal(expected))`
 - Setup code handled in `BeforeEach` blocks for proper test isolation
+- Extensive fuzz testing suite covering packet parsing, message processing, and bit manipulation
+- Automated fuzz test runner script: `./run_fuzz_tests.sh`
+
+**Fuzz Tests Available:**
+
+- `FuzzPacketParse`, `FuzzPacketParseAtTime`, `FuzzPacketValidation`
+- `FuzzMessageProcess`, `FuzzMessageMultipart`, `FuzzDecoderInput`
+- `FuzzBitTwiddling`, `FuzzPacketAccumulator*`
 
 ## Dependencies
 
-- `github.com/sirupsen/logrus`: Structured logging throughout the application
 - `github.com/onsi/ginkgo/v2`: BDD-style testing framework
 - `github.com/onsi/gomega`: Matcher/assertion library for Ginkgo tests
-- `github.com/davecgh/go-spew`: Debug pretty printing for complex data structures
 
 ## Development Notes
 
 - Module path: `github.com/ralreegorganon/nmeaais`
-- Go version: 1.18+
+- Go version: 1.24
 - This project is currently experimental (note: "Not for public consumption yet" in README)
 - Reference links to AIS standards and test data sources are in `reference.md`
+- Comprehensive fuzzing infrastructure for testing edge cases and robustness
 
 ## Environment
 
